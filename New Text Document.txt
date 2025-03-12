@@ -1,0 +1,5 @@
+username: sgallage0000
+password: i8bY8KEHPsxKQClI
+
+mongodb+srv://sgallage0000:i8bY8KEHPsxKQClI@gainslog-cluster.x9u6n.mongodb.net/
+XYElCs-]vxOkL(U}:^!=Zs@j`yCD|m
