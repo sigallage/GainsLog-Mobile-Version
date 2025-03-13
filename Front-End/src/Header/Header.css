@@ -1,80 +1,108 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
 body {
-    margin: 0;
-    padding-top: 60px; /* Adjust this based on header height */
-    font-family: 'Bebas Neue', sans-serif;
-    background-color: #111;
-    color: white;
+  margin: 0;
+  padding-top: 60px; /* Adjust this based on header height */
+  font-family: "Bebas Neue", sans-serif;
+  background-color: #111;
+  color: white;
 }
 
-
 .fitness-header {
-    width: 100vw; /* Ensures it takes the full width */
-    max-width: 100%; /* Removed the problematic 120px */
-    background-color: #000;
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 25px;
-    font-family: 'Bebas Neue', sans-serif;
-    border-bottom: 3px solid red;
-    position: fixed; /* Keeps it at the top */
-    top: 0;
-    left: 0;
-    z-index: 1000; /* Ensures it stays above other elements */
-    box-sizing: border-box; /* Prevents unwanted layout issues */
+  width: 100vw; /* Ensures it takes the full width */
+  max-width: 100%; /* Removed the problematic 120px */
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  font-family: "Bebas Neue", sans-serif;
+  border-bottom: 3px solid red;
+  position: fixed; /* Keeps it at the top */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensures it stays above other elements */
+  box-sizing: border-box; /* Prevents unwanted layout issues */
 }
 
 /* Logo */
 .logo {
-    font-size: 28px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: red;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: red;
 }
 
 /* Navigation Links */
 .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links li {
-    display: inline;
+  display: inline;
 }
 
-.nav-button{
-    background: transparent;
-
+.nav-button {
+  background: transparent;
 }
-
 
 .auth-buttons {
-    display: flex;
-    gap: 15px; /* Space between buttons */
-    margin-left: auto; /* Pushes buttons to the right */
-    flex-shrink: 0; /* Prevents buttons from shrinking */
+  display: flex;
+  gap: 15px; /* Space between buttons */
+  margin-left: auto; /* Pushes buttons to the right */
+  flex-shrink: 0; /* Prevents buttons from shrinking */
 }
 
-.login-btn, .signup-btn {
-    background-color: red;
-    color: #fff;
-    border: none;
-    padding: 10px 30px; /* Reduced padding for better alignment */
-    font-size: 18px;
-    cursor: pointer;
-    letter-spacing: 1px;
-    transition: background 0.3s ease-in-out;
-    font-family: 'Bebas Neue', sans-serif;
-    min-width: 130px; /* Ensures buttons have equal width */
-    white-space: nowrap; /* Prevents text from wrapping */
+.login-btn,
+.signup-btn {
+  background-color: red;
+  color: #fff;
+  border: none;
+  padding: 10px 30px; /* Reduced padding for better alignment */
+  font-size: 18px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.3s ease-in-out;
+  font-family: "Bebas Neue", sans-serif;
+  min-width: 130px; /* Ensures buttons have equal width */
+  white-space: nowrap; /* Prevents text from wrapping */
 }
 
-.login-btn:hover, .signup-btn:hover {
-    background-color: #b30000;
+.login-btn:hover,
+.signup-btn:hover {
+  background-color: #b30000;
+}
+.profile-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-icon {
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.profile-icon:hover {
+  color: red;
+}
+.logout-btn {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  font-size: 14px;
+}
+
+.logout-btn:hover {
+  background-color: darkred;
 }

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import HomePage from "../HomePage/home";
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => { // ✅ Accept setIsLoggedIn as a prop
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -22,7 +21,8 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
       alert("Login successful!");
-      navigate("/"); // Redirect to homepage
+      setIsLoggedIn(true); // ✅ Update login state in App.js
+      navigate("/"); // ✅ Redirect to homepage
     } else {
       alert(data.message);
     }

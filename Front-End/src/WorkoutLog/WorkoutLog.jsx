@@ -10,7 +10,7 @@ const WorkoutLog = () => {
 
   const fetchWorkouts = async () => {
     try {
-      const response = await fetch("https://wger.de/api/v2/workout/");
+      const response = await fetch("https://wger.de/en/exercise/overview/");
       const data = await response.json();
       setWorkoutPlans(data.results.slice(0, 3)); // Get 3 workout plans
     } catch (error) {
