@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
-import workoutRoutes from "./routes/workoutRoutes.js";
-import exerciseRoutes from "./routes/exerciseRoutes.js"; //Import new route
+import workoutRoutes from "./routes/workoutRoutes.js"; // Ensure this is correctly imported
+import exerciseRoutes from "./routes/exerciseRoutes.js";
 
 dotenv.config();
 
@@ -14,8 +14,8 @@ app.use(cors());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/workout", workoutRoutes);
-app.use("/api/exercises", exerciseRoutes); //Add new exercises route
+app.use("/api/workout", workoutRoutes); // Ensure this route is correctly set up
+app.use("/api/exercises", exerciseRoutes);
 
 const PORT = process.env.PORT || 5000;
 
@@ -25,4 +25,4 @@ mongoose
     console.log("MongoDB connected");
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
-  .catch((err) => console.log(err));
+  .catch((err) => console.log("MongoDB connection error:", err));

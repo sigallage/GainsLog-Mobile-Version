@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa"; // Profile Icon
 import "./Header.css";
 
-const Header = () => {
+const Header = ({ isLoggedIn, setIsLoggedIn }) => { //Receive props from App.js
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // Check if user is logged in (token exists in localStorage)
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token from storage
+    localStorage.removeItem("token"); // Remove token
     localStorage.removeItem("userId");
-    setIsLoggedIn(false);
+    setIsLoggedIn(false); //Update global login state
     navigate("/login"); // Redirect to login page
   };
 
@@ -26,11 +19,13 @@ const Header = () => {
       <nav>
         <ul className="nav-links">
           <li><button onClick={() => navigate("/")} className="nav-button">Home</button></li>
-          <li><button onClick={() => navigate("/workout-log")} className="nav-button">Workouts</button></li>
+          <li><button onClick={() => navigate("/workout-log")} className="nav-button">Workout Log</button></li>
+          <li><button onClick={() => navigate("/nutrition-log")} className="nav-button">Nutrition Log</button></li>
+          <li><button onClick={() => navigate("/contact")} className="nav-button">Contact</button></li>
         </ul>
       </nav>
 
-      {/*  Show Profile Icon if Logged In */}
+      {/* Show Profile Icon if Logged In */}
       {isLoggedIn ? (
         <div className="profile-container">
           <FaUserCircle className="profile-icon" onClick={() => navigate("/profile")} />

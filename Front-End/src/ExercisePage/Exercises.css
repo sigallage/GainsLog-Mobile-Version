@@ -1,54 +1,73 @@
+body {
+  padding-top: 80px; /* Matches header height */
+  margin: 0; /* Remove unwanted margins */
+}
+
 .exercise-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 800px;
+  margin: auto;
   padding: 20px;
   text-align: center;
 }
 
-.title {
-  font-size: 28px;
-  color: red;
+h1.title {
+  color: #333;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
   margin-bottom: 20px;
+}
+
+.filters input,
+.filters select {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.filter-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.filter-btn:hover {
+  background: #218838;
 }
 
 .exercise-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
 }
 
 .exercise-card {
-  background: #222;
-  color: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.exercise-card:hover {
+  transform: scale(1.05);
 }
 
 .exercise-card img {
   width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
-.exercise-card h2 {
-  margin: 10px 0;
-  font-size: 20px;
-}
-
-.exercise-card p {
-  font-size: 14px;
-  color: #ddd;
-}
-
-.exercise-card ul {
-  text-align: left;
-  padding: 0;
-  list-style-position: inside;
-}
-
-.exercise-card li {
-  font-size: 14px;
-  margin: 5px 0;
+.exercise-card h3 {
+  color: #007bff;
+  font-size: 16px;
+  margin-top: 10px;
 }

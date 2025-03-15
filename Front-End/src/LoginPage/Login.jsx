@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
-const Login = ({ setIsLoggedIn }) => { // ✅ Accept setIsLoggedIn as a prop
+const Login = ({ setIsLoggedIn }) => { //Accept setIsLoggedIn as a prop
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -21,8 +21,8 @@ const Login = ({ setIsLoggedIn }) => { // ✅ Accept setIsLoggedIn as a prop
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
       alert("Login successful!");
-      setIsLoggedIn(true); // ✅ Update login state in App.js
-      navigate("/"); // ✅ Redirect to homepage
+      setIsLoggedIn(true); // Update login state in App.js
+      navigate("/"); // Redirect to homepage
     } else {
       alert(data.message);
     }
