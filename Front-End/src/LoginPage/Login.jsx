@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { auth, googleProvider, facebookProvider } from "../firebaseConfig";
+import { signInWithPopup, sendPasswordResetEmail } from "firebase/auth";
 
-const Login = ({ setIsLoggedIn }) => { //Accept setIsLoggedIn as a prop
+const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -21,10 +23,45 @@ const Login = ({ setIsLoggedIn }) => { //Accept setIsLoggedIn as a prop
       localStorage.setItem("token", data.token);
       localStorage.setItem("userId", data.userId);
       alert("Login successful!");
-      setIsLoggedIn(true); // Update login state in App.js
-      navigate("/"); // Redirect to homepage
+      setIsLoggedIn(true);
+      navigate("/");
     } else {
       alert(data.message);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      alert("Logged in with Google!");
+      setIsLoggedIn(true);
+      navigate("/");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      await signInWithPopup(auth, facebookProvider);
+      alert("Logged in with Facebook!");
+      setIsLoggedIn(true);
+      navigate("/");
+    } catch (error) {
+      console.error("Facebook Login Error:", error);
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    if (!email) {
+      alert("Please enter your email first.");
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password reset link sent! Check your email.");
+    } catch (error) {
+      console.error("Password Reset Error:", error);
     }
   };
 
@@ -49,6 +86,20 @@ const Login = ({ setIsLoggedIn }) => { //Accept setIsLoggedIn as a prop
           />
           <button type="submit">Login</button>
         </form>
+
+        <div className="social-login">
+          <button onClick={handleGoogleLogin} className="google-btn">
+            Continue with Google
+          </button>
+          <button onClick={handleFacebookLogin} className="facebook-btn">
+            Continue with Facebook
+          </button>
+        </div>
+
+        <button className="forgot-password" onClick={handlePasswordReset}>
+          Forgot Password?
+        </button>
+
         <p>
           Don't have an account? <a href="/signup">Sign Up</a>
         </p>

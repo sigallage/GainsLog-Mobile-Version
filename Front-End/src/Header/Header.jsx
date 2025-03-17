@@ -1,21 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa"; // Profile Icon
 import "./Header.css";
 
-const Header = ({ isLoggedIn, setIsLoggedIn }) => { //Receive props from App.js
+const Header = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
+  const [showProfile, setShowProfile] = useState(false);
+
+  //  Check if user is logged in on mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // Convert token existence to boolean
+  }, [setIsLoggedIn]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Remove token
+    localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    setIsLoggedIn(false); //Update global login state
-    navigate("/login"); // Redirect to login page
+    setIsLoggedIn(false); //  Update global login state
+    navigate("/login"); //  Redirect to login page
   };
 
   return (
     <header className="fitness-header">
       <div className="logo" onClick={() => navigate("/")}>FitZone</div>
+      
       <nav>
         <ul className="nav-links">
           <li><button onClick={() => navigate("/")} className="nav-button">Home</button></li>
@@ -25,11 +33,19 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => { //Receive props from App.js
         </ul>
       </nav>
 
-      {/* Show Profile Icon if Logged In */}
+      {/*  Show Profile Icon if Logged In */}
       {isLoggedIn ? (
         <div className="profile-container">
-          <FaUserCircle className="profile-icon" onClick={() => navigate("/profile")} />
-          <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          <FaUserCircle 
+            className="profile-icon" 
+            onClick={() => setShowProfile(!showProfile)} 
+          />
+          {showProfile && (
+            <div className="profile-dropdown">
+              <button onClick={() => navigate("/profile")}>My Profile</button>
+              <button onClick={handleLogout}>Logout</button>
+            </div>
+          )}
         </div>
       ) : (
         <div className="auth-buttons">

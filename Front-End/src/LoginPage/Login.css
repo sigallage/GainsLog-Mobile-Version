@@ -76,4 +76,36 @@ body {
   p a:hover {
     text-decoration: underline;
   }
+  .social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
   
+  .google-btn, .facebook-btn {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .google-btn {
+    background-color: #db4437;
+    color: white;
+  }
+  
+  .facebook-btn {
+    background-color: #3b5998;
+    color: white;
+  }
+  
+  .forgot-password {
+    background: none;
+    border: none;
+    color: blue;
+    cursor: pointer;
+    margin-top: 10px;
+    text-decoration: underline;
+  }
