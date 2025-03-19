@@ -8,15 +8,14 @@ import Login from "./LoginPage/Login.jsx";
 import Signup from "./SignupPage/SignUp.jsx";
 import Exercises from "./ExercisePage/Exercises.jsx";
 import WorkoutHistory from "./WorkoutHistory/WorkoutHistory.jsx";
+import WorkoutGenerator from "./workoutGenerator/workoutGenerator.jsx"; //Import Workout Generator
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    //Reset login state when the website is loaded
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    setIsLoggedIn(false);
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); //Fix auto logout issue
   }, []);
 
   return (
@@ -29,6 +28,7 @@ function App() {
         <Route path="/exercises" element={<Exercises />} />
         <Route path="/workout-log" element={isLoggedIn ? <WorkoutLog /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/workout-history" element={isLoggedIn ? <WorkoutHistory /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/workout-generator" element={isLoggedIn ? <WorkoutGenerator /> : <Login setIsLoggedIn={setIsLoggedIn} />} /> {/*Added Workout Generator Route */}
       </Routes>
       <Footer />
     </Router>

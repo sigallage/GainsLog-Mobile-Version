@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import { auth, googleProvider, facebookProvider } from "../firebaseConfig";
+import { auth, googleProvider} from "../firebaseConfig";
 import { signInWithPopup, sendPasswordResetEmail } from "firebase/auth";
 
 const Login = ({ setIsLoggedIn }) => {
@@ -38,17 +38,6 @@ const Login = ({ setIsLoggedIn }) => {
       navigate("/");
     } catch (error) {
       console.error("Google Login Error:", error);
-    }
-  };
-
-  const handleFacebookLogin = async () => {
-    try {
-      await signInWithPopup(auth, facebookProvider);
-      alert("Logged in with Facebook!");
-      setIsLoggedIn(true);
-      navigate("/");
-    } catch (error) {
-      console.error("Facebook Login Error:", error);
     }
   };
 
@@ -91,9 +80,7 @@ const Login = ({ setIsLoggedIn }) => {
           <button onClick={handleGoogleLogin} className="google-btn">
             Continue with Google
           </button>
-          <button onClick={handleFacebookLogin} className="facebook-btn">
-            Continue with Facebook
-          </button>
+          
         </div>
 
         <button className="forgot-password" onClick={handlePasswordReset}>

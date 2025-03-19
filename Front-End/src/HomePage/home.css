@@ -27,6 +27,7 @@
   .tile h2 {
     margin-top: 15px;
     font-size: 20px;
+    color: white;
   }
   
   .tile:hover {

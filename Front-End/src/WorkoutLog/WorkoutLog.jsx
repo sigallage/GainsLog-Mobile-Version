@@ -50,7 +50,7 @@ const WorkoutLog = () => {
     navigate("/exercises", { state: { fromWorkoutLog: true } });
   };
 
-  // ✅ Remove an exercise from the log
+  // Remove an exercise from the log
   const removeExercise = (exerciseIndex) => {
     const updatedLog = workoutLog.filter((_, index) => index !== exerciseIndex);
     setWorkoutLog(updatedLog);
@@ -144,7 +144,7 @@ const WorkoutLog = () => {
                 <div key={index} className="exercise-entry">
                   <h4>{exercise.name}</h4>
 
-                  {/* ✅ Remove Exercise Button */}
+                  {/* Remove Exercise Button */}
                   <button className="remove-exercise-btn" onClick={() => removeExercise(index)}>Remove</button>
 
                   {exercise.sets.length > 0 && (
