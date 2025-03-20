@@ -9,37 +9,56 @@ const HF_API_KEY = process.env.HUGGINGFACE_API_KEY;
 const HF_MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1";
 
 router.post("/generate", async (req, res) => {
-  const { level, experience, workoutType } = req.body; // Include workout type
+  const { level, experience, workoutType } = req.body;
 
   const prompt = `
-You are a professional fitness coach. Create a structured ${level} workout plan for someone with ${experience} weeks of gym experience. Focus on a ${workoutType} routine.
-Return the workout in this format:
-Warm-up:
-- [Exercise 1]
-- [Exercise 2]
+You are an expert personal trainer. Create a professional ${level} workout plan for someone with ${experience} weeks of gym experience, focused on ${workoutType}.
+The workout must include:
+- A warm-up section (2-3 exercises)
+- A main workout section (at least 5 strength exercises, with sets, reps, and rest times)
+- A cooldown section (2-3 stretching exercises)
 
-Workout:
-- [Exercise 1]: [Sets] x [Reps]
-- [Exercise 2]: [Sets] x [Reps]
+Follow this strict format:
+---
+**🏋️ Warm-up**:
+1. [Exercise] - [Duration or Reps]
 
-Cooldown:
-- [Stretch 1]
-- [Stretch 2]
+**🔥 Main Workout**:
+1. [Exercise] - [Sets] x [Reps] - [Rest Time]
+2. [Exercise] - [Sets] x [Reps] - [Rest Time]
+3. [Exercise] - [Sets] x [Reps] - [Rest Time]
+4. [Exercise] - [Sets] x [Reps] - [Rest Time]
+5. [Exercise] - [Sets] x [Reps] - [Rest Time]
 
-Do not add explanations. Just output the structured workout.
+**🧘 Cooldown**:
+1. [Stretch] - [Duration]
+2. [Stretch] - [Duration]
+
+Only return the structured workout plan. Do NOT return this prompt. Do NOT add extra explanations.
 `;
 
   try {
     const response = await axios.post(
       HF_MODEL_URL,
-      { inputs: prompt },
+      {
+        inputs: prompt,
+        parameters: { max_new_tokens: 500 } // Ensures full response length
+      },
       { headers: { Authorization: `Bearer ${HF_API_KEY}` } }
     );
 
-    console.log("AI Response:", response.data);
-    res.json({ workout: response.data[0].generated_text });
+    console.log("AI Response:", response.data); // Log response for debugging
+
+    // Extract the generated workout from response
+    const workoutPlan = response.data.generated_text || (response.data[0] && response.data[0].generated_text);
+
+    if (!workoutPlan) {
+      throw new Error("Workout generation failed.");
+    }
+
+    res.json({ workout: workoutPlan }); // Send only the workout to frontend
   } catch (error) {
-    console.error("Hugging Face AI Error:", error);
+    console.error("❌ Hugging Face AI Error:", error.response?.data || error.message);
     res.status(500).json({ error: "Failed to generate workout plan." });
   }
 });

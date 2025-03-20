@@ -4,7 +4,7 @@
   margin: 40px auto;
   padding: 20px;
   border-radius: 10px;
-  background: #fff;
+  background: transparent;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
 }
@@ -18,7 +18,7 @@ label {
   display: block;
   margin-top: 10px;
   font-weight: bold;
-  color: black;
+  
 }
 
 select, input {
@@ -51,4 +51,55 @@ button:disabled {
   border-left: 5px solid #ff5733;
   text-align: left;
   color: black;
+}
+.workout-generator {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+.workout-generator label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.workout-generator select,
+.workout-generator input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.workout-generator button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background: #ff4757;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.workout-generator button:disabled {
+  background: #555;
+}
+
+.workout-output {
+  margin-top: 20px;
+  padding: 15px;
+  background: #333;
+  border-radius: 10px;
+  color: white;
+}
+
+.workout-output pre {
+  white-space: pre-wrap;
+  text-align: left;
 }

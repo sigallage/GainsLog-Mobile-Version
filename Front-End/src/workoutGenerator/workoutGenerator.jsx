@@ -5,7 +5,7 @@ import "./workoutGenerator.css";
 const WorkoutGenerator = () => {
   const [level, setLevel] = useState("beginner");
   const [experience, setExperience] = useState(0);
-  const [workoutType, setWorkoutType] = useState("full body"); // New state for workout type
+  const [workoutType, setWorkoutType] = useState("full body"); // ✅ Added workout type
   const [workout, setWorkout] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -17,12 +17,12 @@ const WorkoutGenerator = () => {
       const response = await axios.post("http://localhost:5000/api/ai-workout/generate", {
         level,
         experience,
-        workoutType, // Send workout type to backend
+        workoutType, // ✅ Send workout type to backend
       });
 
-      setWorkout(response.data.workout);
+      setWorkout(response.data.workout); // ✅ Show only the workout, not the prompt
     } catch (error) {
-      console.error("Error generating workout:", error);
+      console.error("❌ Error generating workout:", error);
       setWorkout("❌ Error fetching workout. Please try again.");
     }
 
@@ -62,7 +62,12 @@ const WorkoutGenerator = () => {
         {loading ? "Generating..." : "Get Workout Plan"}
       </button>
 
-      {workout && <div className="workout-output"><pre>{workout}</pre></div>}
+      {workout && (
+        <div className="workout-output">
+          <h3>🏋️ Your Workout Plan:</h3>
+          <pre>{workout}</pre>
+        </div>
+      )}
     </div>
   );
 };
