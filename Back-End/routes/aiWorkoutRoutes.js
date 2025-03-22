@@ -58,7 +58,7 @@ Only return the structured workout plan. Do NOT return this prompt. Do NOT add e
 
     res.json({ workout: workoutPlan }); // Send only the workout to frontend
   } catch (error) {
-    console.error("❌ Hugging Face AI Error:", error.response?.data || error.message);
+    console.error("Hugging Face AI Error:", error.response?.data || error.message);
     res.status(500).json({ error: "Failed to generate workout plan." });
   }
 });

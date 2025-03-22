@@ -28,7 +28,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
         <ul className="nav-links">
           <li><button onClick={() => navigate("/")} className="nav-button">Home</button></li>
           <li><button onClick={() => navigate("/workout-log")} className="nav-button">Workout Log</button></li>
-          <li><button onClick={() => navigate("/nutrition-log")} className="nav-button">Nutrition Log</button></li>
+          <li><button onClick={() => navigate("/recipe")} className="nav-button">Nutrition Log</button></li>
           <li><button onClick={() => navigate("/contact")} className="nav-button">Contact</button></li>
         </ul>
       </nav>

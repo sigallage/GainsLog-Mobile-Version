@@ -2,7 +2,7 @@
 
 body {
   margin: 0;
-  padding-top: 60px; /* Adjust this based on header height */
+  margin-top: 80px; /* Adjust this based on header height */
   font-family: "Bebas Neue", sans-serif;
   background-color: #111;
   color: white;

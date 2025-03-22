@@ -9,6 +9,7 @@ import Signup from "./SignupPage/SignUp.jsx";
 import Exercises from "./ExercisePage/Exercises.jsx";
 import WorkoutHistory from "./WorkoutHistory/WorkoutHistory.jsx";
 import WorkoutGenerator from "./workoutGenerator/workoutGenerator.jsx"; //Import Workout Generator
+import AIRecipeGenerator from "./RecipeGenerator/recipeGenerator.jsx"; //Import Recipe Generator
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -29,6 +30,7 @@ function App() {
         <Route path="/workout-log" element={isLoggedIn ? <WorkoutLog /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/workout-history" element={isLoggedIn ? <WorkoutHistory /> : <Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/workout-generator" element={isLoggedIn ? <WorkoutGenerator /> : <Login setIsLoggedIn={setIsLoggedIn} />} /> {/*Added Workout Generator Route */}
+        <Route path="/recipe" element={isLoggedIn ? <AIRecipeGenerator /> : <Login setIsLoggedIn={setIsLoggedIn} />} /> {/*Added Recipe Route */}
       </Routes>
       <Footer />
     </Router>

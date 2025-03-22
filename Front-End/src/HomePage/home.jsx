@@ -15,7 +15,7 @@ const HomePage = () => {
   const tiles = [
     { id: 1, title: "Workout Log", image: workoutImg, route: "/workout-log" },
     { id: 2, title: "Generate a Workout", image: generateWorkoutImg, route: "/workout-generator" },
-    { id: 3, title: "Nutrition Log", image: nutritionImg, route: "/nutrition-log" },
+    { id: 3, title: "Nutrition Log", image: nutritionImg, route: "/recipe" },
     { id: 4, title: "Exercises", image: exercisesImg, route: "/exercises" },
     { id: 5, title: "Workout History", image: WorkoutHistoryImg, route: "/workout-history" }
     

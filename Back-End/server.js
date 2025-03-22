@@ -7,6 +7,9 @@ import workoutRoutes from "./routes/workoutRoutes.js";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
 import aiWorkoutRoutes from "./routes/aiWorkoutRoutes.js"; // AI workout generation
 import { rateLimit } from "express-rate-limit"; // Prevent API abuse
+import aiRecipeRoutes from "./routes/aiRecipeRoutes.js";
+
+
 
 dotenv.config();
 
@@ -26,7 +29,8 @@ app.use(limiter);
 app.use("/api/auth", authRoutes);
 app.use("/api/workout", workoutRoutes);
 app.use("/api/exercises", exerciseRoutes);
-app.use("/api/ai-workout", aiWorkoutRoutes); // NEW: AI workout endpoint
+app.use("/api/ai-workout", aiWorkoutRoutes); //AI workout endpoint
+app.use("/api/ai-recipes", aiRecipeRoutes); 
 
 const PORT = process.env.PORT || 5000;
 
