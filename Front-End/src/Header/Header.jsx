@@ -1,24 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa"; // Profile Icon
+import { useAuth0 } from "@auth0/auth0-react"; // Import Auth0 Hook
 import "./Header.css";
 
-const Header = ({ isLoggedIn, setIsLoggedIn }) => {
+const Header = () => {
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
 
-  //  Check if user is logged in on mount
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Convert token existence to boolean
-  }, [setIsLoggedIn]);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    setIsLoggedIn(false); //  Update global login state
-    navigate("/login"); //  Redirect to login page
-  };
+  // Auth0 hooks
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
   return (
     <header className="fitness-header">
@@ -34,7 +25,7 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
       </nav>
 
       {/*  Show Profile Icon if Logged In */}
-      {isLoggedIn ? (
+      {isAuthenticated ? (
         <div className="profile-container">
           <FaUserCircle 
             className="profile-icon" 
@@ -42,15 +33,24 @@ const Header = ({ isLoggedIn, setIsLoggedIn }) => {
           />
           {showProfile && (
             <div className="profile-dropdown">
+              <p>Welcome, {user.name}!</p>
               <button onClick={() => navigate("/profile")}>My Profile</button>
-              <button onClick={handleLogout}>Logout</button>
+              <button 
+                onClick={() => logout({ returnTo: window.location.origin })}
+              >
+                Logout
+              </button>
             </div>
           )}
         </div>
       ) : (
         <div className="auth-buttons">
-          <button className="login-btn" onClick={() => navigate("/login")}>Login</button>
-          <button className="signup-btn" onClick={() => navigate("/signup")}>Sign Up</button>
+          <button className="login-btn" onClick={() => loginWithRedirect()}>
+            Login
+          </button>
+          <button className="signup-btn" onClick={() => loginWithRedirect({ screen_hint: "signup" })}>
+            Sign Up
+          </button>
         </div>
       )}
     </header>

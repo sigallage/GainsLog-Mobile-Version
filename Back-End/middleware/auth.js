@@ -1,16 +1,19 @@
-import jwt from "jsonwebtoken";
+import jwt from "express-jwt";
+import jwksRsa from "jwks-rsa";
+import dotenv from "dotenv";
 
-const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
-  if (!token) return res.status(403).json({ message: "Access denied" });
+dotenv.config();
 
-  try {
-    const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
-  }
-};
+// Middleware to verify Auth0 tokens
+const authMiddleware = jwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`, // Get public keys from Auth0
+  }),
+  audience: process.env.AUTH0_AUDIENCE, // Your Auth0 API identifier
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+  algorithms: ["RS256"], // Auth0 uses RS256 algorithm
+});
 
 export default authMiddleware;
