@@ -6,9 +6,8 @@ const Signup = () => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   const navigate = useNavigate();
 
-  // If user is already logged in, redirect them to home
   if (isAuthenticated) {
-    navigate("/");
+    navigate("/profile");
     return null;
   }
 

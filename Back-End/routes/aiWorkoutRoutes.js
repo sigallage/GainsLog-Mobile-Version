@@ -20,17 +20,17 @@ The workout must include:
 
 Follow this strict format:
 ---
-**🏋️ Warm-up**:
+🏋️ Warm-up:
 1. [Exercise] - [Duration or Reps]
 
-**🔥 Main Workout**:
+🔥 Main Workout:
 1. [Exercise] - [Sets] x [Reps] - [Rest Time]
 2. [Exercise] - [Sets] x [Reps] - [Rest Time]
 3. [Exercise] - [Sets] x [Reps] - [Rest Time]
 4. [Exercise] - [Sets] x [Reps] - [Rest Time]
 5. [Exercise] - [Sets] x [Reps] - [Rest Time]
 
-**🧘 Cooldown**:
+🧘 Cooldown:
 1. [Stretch] - [Duration]
 2. [Stretch] - [Duration]
 

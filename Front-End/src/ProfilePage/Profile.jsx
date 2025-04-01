@@ -1,105 +1,114 @@
-import { useState, useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
 const Profile = () => {
+  const { user, isAuthenticated, logout } = useAuth0();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [editing, setEditing] = useState(false);
-  const [updatedUser, setUpdatedUser] = useState({ name: "", email: "" });
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    picture: "",
+    age: "",
+    weight: "",
+    bodyFat: "",
+    leanMass: ""
+  });
 
-  // Fetch user details when the page loads
+  const [previewImage, setPreviewImage] = useState("");
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        navigate("/login"); // Redirect if not logged in
-        return;
-      }
-
-      try {
-        const response = await fetch("http://localhost:5000/api/auth/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setUser(data);
-          setUpdatedUser({ name: data.name, email: data.email });
-        } else {
-          alert("Failed to load profile.");
-        }
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-
-    fetchUser();
-  }, [navigate]);
-
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    navigate("/login");
-  };
-
-  // Handle input changes
-  const handleChange = (e) => {
-    setUpdatedUser({ ...updatedUser, [e.target.name]: e.target.value });
-  };
-
-  // Save updated profile
-  const handleSave = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:5000/api/auth/update-profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updatedUser),
+    if (isAuthenticated && user) {
+      setFormData({
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        age: "",
+        weight: "",
+        bodyFat: "",
+        leanMass: ""
       });
+      setPreviewImage(user.picture);
+    } else {
+      navigate("/login");
+    }
+  }, [isAuthenticated, user, navigate]);
 
-      const data = await response.json();
-      if (response.ok) {
-        setUser(data);
-        setEditing(false);
-        alert("Profile updated successfully!");
-      } else {
-        alert("Failed to update profile.");
-      }
-    } catch (error) {
-      console.error("Error updating profile:", error);
+  // Handle form input change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Handle image upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+        setFormData({ ...formData, picture: reader.result });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  if (!user) return <p>Loading...</p>;
+  // Handle selecting a preset avatar
+  const handlePresetImage = (imageUrl) => {
+    setPreviewImage(imageUrl);
+    setFormData({ ...formData, picture: imageUrl });
+  };
+
+  // Calculate lean muscle mass (Lean Mass = Weight - (Weight * Body Fat %))
+  useEffect(() => {
+    if (formData.weight && formData.bodyFat) {
+      const leanMass = formData.weight - (formData.weight * (formData.bodyFat / 100));
+      setFormData((prev) => ({ ...prev, leanMass: leanMass.toFixed(2) }));
+    }
+  }, [formData.weight, formData.bodyFat]);
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Updated user info:", formData);
+    alert("Profile updated successfully!");
+  };
 
   return (
     <div className="profile-container">
-      <h2>👤 Your Profile</h2>
       <div className="profile-card">
-        <img
-          src={user.profilePicture || "https://via.placeholder.com/100"}
-          alt="Profile"
-          className="profile-pic"
-        />
-        {editing ? (
-          <>
-            <input type="text" name="name" value={updatedUser.name} onChange={handleChange} />
-            <input type="email" name="email" value={updatedUser.email} onChange={handleChange} />
-            <button className="save-btn" onClick={handleSave}>Save</button>
-            <button className="cancel-btn" onClick={() => setEditing(false)}>Cancel</button>
-          </>
-        ) : (
-          <>
-            <p><strong>Name:</strong> {user.name}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <button className="edit-btn" onClick={() => setEditing(true)}>Edit Profile</button>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
-          </>
-        )}
+        <h2>Edit Your Profile</h2>
+
+        {/* Profile Picture Preview */}
+        <div className="profile-picture-container">
+          <img src={previewImage} alt="Profile" className="profile-picture" />
+        </div>
+
+        {/* Upload Image */}
+        <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
+
+        {/* Preset Avatars */}
+        <div className="preset-images">
+          <img src="https://i.pravatar.cc/100?img=1" onClick={() => handlePresetImage("https://i.pravatar.cc/100?img=1")} alt="Avatar1" />
+          <img src="https://i.pravatar.cc/100?img=2" onClick={() => handlePresetImage("https://i.pravatar.cc/100?img=2")} alt="Avatar2" />
+          <img src="https://i.pravatar.cc/100?img=3" onClick={() => handlePresetImage("https://i.pravatar.cc/100?img=3")} alt="Avatar3" />
+        </div>
+
+        {/* Update Form */}
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" required />
+          <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
+          <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Age" required />
+          <input type="number" name="weight" value={formData.weight} onChange={handleChange} placeholder="Weight (kg)" required />
+          <input type="number" name="bodyFat" value={formData.bodyFat} onChange={handleChange} placeholder="Body Fat (%)" required />
+          <input type="text" name="leanMass" value={formData.leanMass} readOnly placeholder="Lean Muscle Mass (kg)" />
+
+          <button type="submit" className="btn save-btn">Save Changes</button>
+        </form>
+
+        {/* Logout Button */}
+        <button onClick={() => logout({ returnTo: window.location.origin })} className="btn logout-btn">Log Out</button>
       </div>
     </div>
   );

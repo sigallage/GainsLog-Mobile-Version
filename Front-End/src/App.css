@@ -43,11 +43,11 @@
 /* Push content below the fixed header */
 body {
   margin: 0;
-  padding-top: 80px; /* ✅ Adjust this to match your header height */
+  padding-top: 80px; /* Adjust this to match your header height */
 }
 
 /* Ensure all pages have enough space below the header */
 .page-container {
-  margin-top: 80px; /* ✅ Matches header height */
+  margin-top: 80px; /* Matches header height */
   padding: 20px;
 }
