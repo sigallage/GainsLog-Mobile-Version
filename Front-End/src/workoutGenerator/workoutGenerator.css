@@ -1,0 +1,105 @@
+.workout-generator {
+  width: 90%;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  
+}
+
+select, input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  border: none;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #999;
+}
+
+.workout-output {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f4f4f4;
+  border-left: 5px solid #ff5733;
+  text-align: left;
+  color: black;
+}
+.workout-generator {
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+.workout-generator label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.workout-generator select,
+.workout-generator input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+.workout-generator button {
+  margin-top: 15px;
+  padding: 10px 15px;
+  font-size: 16px;
+  background: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.workout-generator button:disabled {
+  background: #555;
+}
+
+.workout-output {
+  margin-top: 20px;
+  padding: 15px;
+  background: #333;
+  border-radius: 10px;
+  color: white;
+}
+
+.workout-output pre {
+  white-space: pre-wrap;
+  text-align: left;
+}
