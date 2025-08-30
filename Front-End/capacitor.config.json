@@ -1,0 +1,20 @@
+{
+  "appId": "com.gainslog.app",
+  "appName": "GainsLog",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#242424"
+    },
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#242424",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  }
+}

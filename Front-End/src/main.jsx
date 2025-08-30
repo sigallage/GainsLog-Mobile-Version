@@ -1,7 +1,19 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { SplashScreen } from '@capacitor/splash-screen';
 import App from './App';
+
+// Initialize mobile app if running on native platform
+if (Capacitor.isNativePlatform()) {
+  // Configure status bar
+  StatusBar.setStyle({ style: Style.Dark });
+  
+  // Hide splash screen when app is ready
+  SplashScreen.hide();
+}
 
 const root = createRoot(document.getElementById('root'));
 

@@ -7,10 +7,18 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "android:build": "npm run build && npx cap copy android && npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:run": "npm run android:build && npm run android:open"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/splash-screen": "^7.0.2",
+    "@capacitor/status-bar": "^7.0.2",
     "axios": "^1.8.3",
     "chart.js": "^4.4.8",
     "react": "^19.0.0",
