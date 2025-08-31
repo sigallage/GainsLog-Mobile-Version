@@ -18,7 +18,8 @@ if (Capacitor.isNativePlatform()) {
 // Determine redirect URI based on platform
 const getRedirectUri = () => {
   if (Capacitor.isNativePlatform()) {
-    return "com.gainslog.app://dev-o87gtr0hl6pu381w.us.auth0.com/capacitor/com.gainslog.app/callback";
+    // Use a simpler, more reliable callback URL for mobile
+    return "com.gainslog.app://callback";
   }
   return window.location.origin;
 };
@@ -37,8 +38,13 @@ root.render(
   useRefreshTokens={true}
   cacheLocation="localstorage"
   onRedirectCallback={(appState) => {
-    
-    window.location.href = appState?.returnTo || window.location.pathname;
+    console.log('Auth0 callback received:', appState);
+    // For mobile, just reload the app to refresh auth state
+    if (Capacitor.isNativePlatform()) {
+      window.location.reload();
+    } else {
+      window.location.href = appState?.returnTo || window.location.pathname;
+    }
   }}
 >
     <App />

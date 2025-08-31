@@ -15,7 +15,9 @@ const Header = () => {
 
   // Auth0 hooks
   const { loginWithRedirect, logout } = useAuth0();
-  const { isAuthenticated, user } = useAuthStatus();
+  const { isAuthenticated, isLoading, user } = useAuthStatus();
+
+  console.log('Header auth state:', { isAuthenticated, isLoading, user: user?.name });
   
 
   return (
@@ -62,7 +64,11 @@ const Header = () => {
           </div>
 
           <div className="sheet-auth-section">
-            {isAuthenticated ? (
+            {isLoading ? (
+              <div className="sheet-profile-info">
+                <p>Loading...</p>
+              </div>
+            ) : isAuthenticated ? (
               <>
                 <div className="sheet-profile-info">
                   <p>Welcome, {user?.name || 'User'}!</p>
@@ -102,7 +108,11 @@ const Header = () => {
       </nav>
       
       {/*  Show Profile Icon if Logged In (Desktop) */}
-      {isAuthenticated ? (
+      {isLoading ? (
+        <div className="auth-buttons desktop-only">
+          <span>Loading...</span>
+        </div>
+      ) : isAuthenticated ? (
         <div className="profile-container desktop-only">
           <FaUserCircle 
             className="profile-icon" 
