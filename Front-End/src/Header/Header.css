@@ -27,12 +27,13 @@ body {
 }
 
 .hamburger {
-  display: none;
+  display: block;
   color: white;
   cursor: pointer;
   padding: 8px;
   border-radius: 4px;
   transition: background-color 0.2s;
+  z-index: 1001;
 }
 
 .hamburger:hover {
@@ -44,13 +45,13 @@ body {
   display: none;
 }
 
-/* Desktop nav styles */
+/* Desktop nav styles - hidden by default */
 .nav-desktop {
-  display: flex;
+  display: none;
 }
 
 .desktop-only {
-  display: flex;
+  display: none;
 }
 
 /* Logo */
@@ -59,6 +60,7 @@ body {
   font-weight: bold;
   letter-spacing: 2px;
   color: red;
+  cursor: pointer;
 }
 
 /* Navigation Links */
@@ -69,7 +71,19 @@ body {
   margin: 0;
   padding: 0;
 }
-@media (max-width: 900px) {
+@media (min-width: 1200px) {
+  .nav-desktop {
+    display: flex;
+  }
+  .desktop-only {
+    display: flex;
+  }
+  .hamburger {
+    display: none;
+  }
+}
+
+@media (max-width: 1199px) {
   .nav-desktop {
     display: none;
   }

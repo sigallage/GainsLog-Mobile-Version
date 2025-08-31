@@ -20,15 +20,15 @@ const Header = () => {
 
   return (
     <header className="fitness-header">
-      <div className="logo" onClick={() => navigate("/")}>FitZone</div>
+      <div className="logo" onClick={() => navigate("/")}>GainsLog</div>
       
+      {/* Hamburger Menu Button */}
+      <div className="hamburger" onClick={() => setMenuOpen(true)}>
+        <FaBars size={28} />
+      </div>
+
       {/* Mobile Menu Sheet */}
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-        <SheetTrigger onClick={() => setMenuOpen(true)}>
-          <div className="hamburger">
-            <FaBars size={28} />
-          </div>
-        </SheetTrigger>
         <SheetContent>
           <SheetHeader>
             <SheetTitle>Menu</SheetTitle>
