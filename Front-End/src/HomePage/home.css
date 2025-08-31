@@ -1,8 +1,8 @@
   .homepage {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 32px;
-    padding: 100px 16px 32px 16px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 100px;
     justify-content: center;
     align-items: center;
   }
@@ -11,50 +11,39 @@
     background-color: #222;
     color: #fff;
     text-align: center;
-    padding: 32px 16px 32px 16px;
-    border-radius: 18px;
+    padding: 20px;
+    border-radius: 10px;
     cursor: pointer;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    max-width: 500px;
-    margin: 0 auto;
   }
 
   .tile img {
     width: 100%;
-    height: 220px;
+    height: 150px;
     object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 18px;
+    border-radius: 10px;
   }
 
   .tile h2 {
-    margin-top: 10px;
-    font-size: 2rem;
+    margin-top: 15px;
+    font-size: 20px;
     color: white;
-    font-weight: bold;
   }
 
-  .tile:hover {
+    .tile:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 16px rgba(255, 0, 0, 0.6);
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.6);
   }
 
   @media (max-width: 900px) {
     .homepage {
       grid-template-columns: 1fr;
-      padding: 80px 8px 24px 8px;
-      gap: 28px;
+      padding: 80px 20px 20px 20px;
+      gap: 20px;
     }
     .tile {
-      padding: 28px 8px 28px 8px;
-      max-width: 98vw;
-    }
-    .tile img {
-      height: 180px;
-    }
-    .tile h2 {
-      font-size: 1.4rem;
+      max-width: 90vw;
+      margin: 0 auto;
     }
   }
   

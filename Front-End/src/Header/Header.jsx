@@ -4,6 +4,8 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa"; // Profile Icon
 import { useAuth0 } from "@auth0/auth0-react"; // Import Auth0 Hook
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetClose } from "../components/ui/sheet";
+import "../components/ui/sheet.css";
 import "./Header.css";
 
 const Header = () => {
@@ -19,17 +21,76 @@ const Header = () => {
   return (
     <header className="fitness-header">
       <div className="logo" onClick={() => navigate("/")}>FitZone</div>
-      <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? <FaTimes size={28} /> : <FaBars size={28} />}
-      </div>
-      <nav className={menuOpen ? "nav-mobile open" : "nav-mobile"}>
-        <ul className="nav-links">
-          <li><button onClick={() => {navigate("/"); setMenuOpen(false);}} className="nav-button">Home</button></li>
-          <li><button onClick={() => {navigate("/workout-log"); setMenuOpen(false);}} className="nav-button">Workout Log</button></li>
-          <li><button onClick={() => {navigate("/recipe"); setMenuOpen(false);}} className="nav-button">Nutrition Log</button></li>
-          <li><button onClick={() => {navigate("/contact"); setMenuOpen(false);}} className="nav-button">Contact</button></li>
-        </ul>
-      </nav>
+      
+      {/* Mobile Menu Sheet */}
+      <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+        <SheetTrigger onClick={() => setMenuOpen(true)}>
+          <div className="hamburger">
+            <FaBars size={28} />
+          </div>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Menu</SheetTitle>
+            <SheetClose onClick={() => setMenuOpen(false)}>
+              <FaTimes />
+            </SheetClose>
+          </SheetHeader>
+          
+          <div className="sheet-nav-menu">
+            <button onClick={() => {navigate("/"); setMenuOpen(false);}} className="sheet-nav-button">
+              Home
+            </button>
+            <button onClick={() => {navigate("/workout-log"); setMenuOpen(false);}} className="sheet-nav-button">
+              Workout Log
+            </button>
+            <button onClick={() => {navigate("/recipe"); setMenuOpen(false);}} className="sheet-nav-button">
+              Nutrition Log
+            </button>
+            <button onClick={() => {navigate("/exercises"); setMenuOpen(false);}} className="sheet-nav-button">
+              Exercises
+            </button>
+            <button onClick={() => {navigate("/workout-history"); setMenuOpen(false);}} className="sheet-nav-button">
+              Workout History
+            </button>
+            <button onClick={() => {navigate("/workout-generator"); setMenuOpen(false);}} className="sheet-nav-button">
+              Generate Workout
+            </button>
+            <button onClick={() => {navigate("/contact"); setMenuOpen(false);}} className="sheet-nav-button">
+              Contact
+            </button>
+          </div>
+
+          <div className="sheet-auth-section">
+            {isAuthenticated ? (
+              <>
+                <div className="sheet-profile-info">
+                  <p>Welcome, {user?.name || 'User'}!</p>
+                </div>
+                <button onClick={() => {navigate("/profile"); setMenuOpen(false);}} className="sheet-nav-button">
+                  My Profile
+                </button>
+                <button 
+                  onClick={() => {logout({ returnTo: window.location.origin }); setMenuOpen(false);}}
+                  className="sheet-auth-button"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="sheet-auth-button" onClick={() => {loginWithRedirect(); setMenuOpen(false);}}>
+                  Login
+                </button>
+                <button className="sheet-auth-button" onClick={() => {loginWithRedirect({ screen_hint: "signup" }); setMenuOpen(false);}}>
+                  Sign Up
+                </button>
+              </>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
+
       {/* Desktop nav for larger screens */}
       <nav className="nav-desktop">
         <ul className="nav-links">
@@ -39,16 +100,17 @@ const Header = () => {
           <li><button onClick={() => navigate("/contact")} className="nav-button">Contact</button></li>
         </ul>
       </nav>
-      {/*  Show Profile Icon if Logged In */}
+      
+      {/*  Show Profile Icon if Logged In (Desktop) */}
       {isAuthenticated ? (
-        <div className="profile-container">
+        <div className="profile-container desktop-only">
           <FaUserCircle 
             className="profile-icon" 
             onClick={() => setShowProfile(!showProfile)} 
           />
           {showProfile && (
             <div className="profile-dropdown">
-              <p>Welcome, {user.name}!</p>
+              <p>Welcome, {user?.name}!</p>
               <button onClick={() => navigate("/profile")}>My Profile</button>
               <button 
                 onClick={() => logout({ returnTo: window.location.origin })}
@@ -59,7 +121,7 @@ const Header = () => {
           )}
         </div>
       ) : (
-        <div className="auth-buttons">
+        <div className="auth-buttons desktop-only">
           <button className="login-btn" onClick={() => loginWithRedirect()}>
             Login
           </button>
