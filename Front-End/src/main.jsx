@@ -15,6 +15,14 @@ if (Capacitor.isNativePlatform()) {
   SplashScreen.hide();
 }
 
+// Determine redirect URI based on platform
+const getRedirectUri = () => {
+  if (Capacitor.isNativePlatform()) {
+    return "com.gainslog.app://dev-o87gtr0hl6pu381w.us.auth0.com/capacitor/com.gainslog.app/callback";
+  }
+  return window.location.origin;
+};
+
 const root = createRoot(document.getElementById('root'));
 
 root.render(
@@ -22,7 +30,7 @@ root.render(
   domain="dev-o87gtr0hl6pu381w.us.auth0.com"
   clientId="xqrbTdmsTw4g7TfTVZVC5KGqPuq7sFrk"
   authorizationParams={{
-    redirect_uri: window.location.origin,
+    redirect_uri: getRedirectUri(),
     audience: "gains-log-api",
     scope: "openid profile email write:workouts offline_access"
   }}

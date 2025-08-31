@@ -16,5 +16,9 @@
       "androidSplashResourceName": "splash",
       "showSpinner": false
     }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "handleDeepLinks": true
   }
 }
