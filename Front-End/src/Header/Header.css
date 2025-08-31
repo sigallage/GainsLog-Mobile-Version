@@ -9,8 +9,8 @@ body {
 }
 
 .fitness-header {
-  width: 100vw; /* Ensures it takes the full width */
-  max-width: 100%; /* Removed the problematic 120px */
+  width: 100vw;
+  max-width: 100%;
   background-color: #000;
   color: #fff;
   display: flex;
@@ -19,11 +19,48 @@ body {
   padding: 15px 25px;
   font-family: "Bebas Neue", sans-serif;
   border-bottom: 3px solid red;
-  position: fixed; /* Keeps it at the top */
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000; /* Ensures it stays above other elements */
-  box-sizing: border-box; /* Prevents unwanted layout issues */
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.hamburger {
+  display: none;
+  color: white;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+/* Mobile nav styles */
+.nav-mobile {
+  display: none;
+}
+.nav-mobile.open {
+  display: block;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100vw;
+  background: #111;
+  z-index: 2000;
+  padding: 20px 0 10px 0;
+  border-bottom: 2px solid red;
+}
+.nav-mobile .nav-links {
+  flex-direction: column;
+  gap: 0;
+  align-items: flex-start;
+}
+.nav-mobile .nav-links li {
+  display: block;
+  margin: 10px 0;
+}
+
+/* Desktop nav styles */
+.nav-desktop {
+  display: flex;
 }
 
 /* Logo */
@@ -41,6 +78,21 @@ body {
   gap: 20px;
   margin: 0;
   padding: 0;
+}
+@media (max-width: 900px) {
+  .nav-desktop {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .fitness-header {
+    flex-direction: row;
+    padding: 10px 10px;
+  }
 }
 
 .nav-links li {
