@@ -97,7 +97,7 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>Login to FITZONE</h2>
+        <h2>Login to GAINSLOG</h2>
 
         {!isAuthenticated ? (
           <>

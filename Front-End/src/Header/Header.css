@@ -27,7 +27,7 @@ body {
 }
 
 .hamburger {
-  display: block;
+  display: block !important;
   color: white;
   cursor: pointer;
   padding: 8px;
@@ -47,11 +47,11 @@ body {
 
 /* Desktop nav styles - hidden by default */
 .nav-desktop {
-  display: none;
+  display: none !important;
 }
 
 .desktop-only {
-  display: none;
+  display: none !important;
 }
 
 /* Logo */
