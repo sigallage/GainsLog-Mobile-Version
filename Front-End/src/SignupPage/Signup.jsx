@@ -3,6 +3,7 @@ import { useEffect } from "react";  // ← Changed import source
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const Signup = () => {
   const { loginWithRedirect, isAuthenticated, user } = useAuth0();
@@ -11,7 +12,7 @@ const Signup = () => {
   // Save user to MongoDB when authenticated
   useEffect(() => {
     if (isAuthenticated && user) {
-      fetch("http://localhost:5000/api/users", {
+      fetch(`${API_URL}/api/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

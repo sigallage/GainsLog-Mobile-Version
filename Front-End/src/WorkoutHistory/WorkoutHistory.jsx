@@ -3,6 +3,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import "./WorkoutHistory.css";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const WorkoutHistory = () => {
   const [workoutHistory, setWorkoutHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ const WorkoutHistory = () => {
       setLoading(true);
       setError(null);
       const token = await getAccessTokenSilently();
-      const response = await axios.get("http://localhost:5000/api/workouts", {
+      const response = await axios.get(`${API_URL}/api/workouts`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
