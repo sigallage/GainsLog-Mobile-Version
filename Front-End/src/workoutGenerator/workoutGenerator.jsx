@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { performLogin } from "../utils/auth";
 import axios from "axios";
 import "./workoutGenerator.css";
 
@@ -21,15 +22,17 @@ const WorkoutGenerator = () => {
   const [error, setError] = useState(null);
 
   const generateWorkout = async () => {
+    console.log('Generate workout clicked, authenticated:', isAuthenticated);
+    
     if (!isAuthenticated) {
-      await loginWithRedirect({
-        appState: { returnTo: window.location.pathname },
-        authorizationParams: {
-          prompt: "login",
-          scope: "openid profile email write:workouts offline_access",
-          audience: AUTH0_AUDIENCE
-        }
-      });
+      console.log('Not authenticated, redirecting to login');
+      try {
+        await performLogin(loginWithRedirect, {
+          returnTo: window.location.pathname
+        });
+      } catch (error) {
+        console.error('Login redirect failed:', error);
+      }
       return;
     }
 
@@ -45,10 +48,15 @@ const WorkoutGenerator = () => {
         },
         timeout: 5000
       }).catch(async (error) => {
+        console.error('Token fetch failed:', error);
         if (error.error === "login_required") {
-          await loginWithRedirect({
-            appState: { returnTo: window.location.pathname }
-          });
+          try {
+            await performLogin(loginWithRedirect, {
+              returnTo: window.location.pathname
+            });
+          } catch (loginError) {
+            console.error('Login redirect failed:', loginError);
+          }
         }
         throw error;
       });

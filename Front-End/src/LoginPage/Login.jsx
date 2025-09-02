@@ -1,6 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { performLogin, performLogout } from "../utils/auth";
 import "./Login.css";
 
 const Login = () => {
@@ -58,31 +59,31 @@ const Login = () => {
   }, [isAuthenticated, isLoading, navigate]);
 
   const handleLogin = async () => {
+    console.log('Login button clicked');
+    
     // Store current path for post-login return
     const returnPath = window.location.pathname !== "/login" 
       ? window.location.pathname 
       : "/workout-log";
     
-    await loginWithRedirect({
-      authorizationParams: {
-        prompt: "login",
-        scope: "openid profile email write:workouts offline_access",
-        audience: "gains-log-api",
-        redirect_uri: window.location.origin
-      },
-      appState: {
-        returnTo: returnPath // Dynamic return path
-      }
-    });
+    try {
+      await performLogin(loginWithRedirect, {
+        returnTo: returnPath,
+        authorizationParams: {
+          prompt: "login"
+        }
+      });
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
   };
 
-  const handleLogout = () => {
-    logout({ 
-      logoutParams: {
-        returnTo: window.location.origin,
-        clientId: "xqrbTdmsTw4g7TfTVZVC5KGqPuq7sFrk" // Explicit client ID
-      }
-    });
+  const handleLogout = async () => {
+    try {
+      await performLogout(logout);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   if (isLoading) {

@@ -12,6 +12,7 @@ import WorkoutGenerator from "./workoutGenerator/workoutGenerator.jsx";
 import AIRecipeGenerator from "./RecipeGenerator/recipeGenerator.jsx";
 import Profile from "./ProfilePage/Profile.jsx";
 import Contact from "./Contact Page/Contact.jsx";
+import AuthDebug from "./components/AuthDebug.jsx";
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
         <Footer />
+        <AuthDebug />
       
     </Router>
   );

@@ -4,6 +4,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa"; // Profile Icon
 import { useAuth0 } from "@auth0/auth0-react"; // Import Auth0 Hook
+import { performLogin, performLogout } from "../utils/auth";
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetClose } from "../components/ui/sheet";
 import "../components/ui/sheet.css";
 import "./Header.css";
@@ -18,6 +19,39 @@ const Header = () => {
   const { isAuthenticated, isLoading, user } = useAuthStatus();
 
   console.log('Header auth state:', { isAuthenticated, isLoading, user: user?.name });
+
+  const handleLogin = async () => {
+    console.log('Header login clicked');
+    try {
+      await performLogin(loginWithRedirect, {
+        returnTo: window.location.pathname
+      });
+    } catch (error) {
+      console.error('Header login failed:', error);
+    }
+  };
+
+  const handleSignup = async () => {
+    console.log('Header signup clicked');
+    try {
+      await performLogin(loginWithRedirect, {
+        returnTo: window.location.pathname,
+        authorizationParams: {
+          screen_hint: "signup"
+        }
+      });
+    } catch (error) {
+      console.error('Header signup failed:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await performLogout(logout);
+    } catch (error) {
+      console.error('Header logout failed:', error);
+    }
+  };
   
 
   return (
@@ -77,7 +111,7 @@ const Header = () => {
                   My Profile
                 </button>
                 <button 
-                  onClick={() => {logout({ returnTo: window.location.origin }); setMenuOpen(false);}}
+                  onClick={() => {handleLogout(); setMenuOpen(false);}}
                   className="sheet-auth-button"
                 >
                   Logout
@@ -85,10 +119,10 @@ const Header = () => {
               </>
             ) : (
               <>
-                <button className="sheet-auth-button" onClick={() => {loginWithRedirect(); setMenuOpen(false);}}>
+                <button className="sheet-auth-button" onClick={() => {handleLogin(); setMenuOpen(false);}}>
                   Login
                 </button>
-                <button className="sheet-auth-button" onClick={() => {loginWithRedirect({ screen_hint: "signup" }); setMenuOpen(false);}}>
+                <button className="sheet-auth-button" onClick={() => {handleSignup(); setMenuOpen(false);}}>
                   Sign Up
                 </button>
               </>
@@ -123,7 +157,7 @@ const Header = () => {
               <p>Welcome, {user?.name}!</p>
               <button onClick={() => navigate("/profile")}>My Profile</button>
               <button 
-                onClick={() => logout({ returnTo: window.location.origin })}
+                onClick={handleLogout}
               >
                 Logout
               </button>
@@ -132,10 +166,10 @@ const Header = () => {
         </div>
       ) : (
         <div className="auth-buttons desktop-only">
-          <button className="login-btn" onClick={() => loginWithRedirect()}>
+          <button className="login-btn" onClick={handleLogin}>
             Login
           </button>
-          <button className="signup-btn" onClick={() => loginWithRedirect({ screen_hint: "signup" })}>
+          <button className="signup-btn" onClick={handleSignup}>
             Sign Up
           </button>
         </div>
