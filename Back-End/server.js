@@ -16,7 +16,14 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:5173", // Your frontend URL
+  origin: [
+    "http://localhost:5173", // Development server
+    "http://localhost", // Mobile app HTTP
+    "https://localhost", // Mobile app HTTPS
+    "http://10.0.2.2:5173", // Android emulator
+    "capacitor://localhost", // Capacitor iOS
+    "http://capacitor.localhost" // Capacitor Android
+  ],
   credentials: true
 }));
 
@@ -42,7 +49,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT} and accessible from all interfaces`));
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
