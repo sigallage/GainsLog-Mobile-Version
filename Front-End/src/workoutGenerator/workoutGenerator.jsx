@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { performLogin } from "../utils/auth";
-import axios from "axios";
+import { apiClient } from "../utils/httpClient";
 import "./workoutGenerator.css";
 
 const AUTH0_AUDIENCE = "gains-log-api";
@@ -63,7 +63,7 @@ const WorkoutGenerator = () => {
 
       const prompt = `Generate a ${level} level ${workoutType} workout for someone with ${experience} weeks of gym experience`;
       
-      const response = await axios.post(`${API_URL}/api/aiworkouts/generate`, {
+      const response = await apiClient.post("/api/aiworkouts/generate", {
         level,
         experience,
         workoutType,

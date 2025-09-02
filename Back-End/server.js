@@ -22,7 +22,9 @@ app.use(cors({
     "https://localhost", // Mobile app HTTPS
     "http://10.0.2.2:5173", // Android emulator
     "capacitor://localhost", // Capacitor iOS
-    "http://capacitor.localhost" // Capacitor Android
+    "http://capacitor.localhost", // Capacitor Android
+    "ionic://localhost", // Ionic
+    "*" // Allow all origins for development (remove in production)
   ],
   credentials: true
 }));

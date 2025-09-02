@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import axios from "axios";
+import { apiClient } from "../utils/httpClient";
 import "./WorkoutLog.css";
 
 const AUTH0_AUDIENCE = "gains-log-api";
@@ -173,7 +173,7 @@ const WorkoutLog = () => {
         throw error;
       });
 
-      await axios.post(`${API_URL}/api/workouts`, {
+      await apiClient.post("/api/workouts", {
         name: workoutName,
         exercises: workoutLog,
       }, {

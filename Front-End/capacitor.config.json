@@ -3,7 +3,7 @@
   "appName": "GainsLog",
   "webDir": "dist",
   "server": {
-    "androidScheme": "http",
+    "androidScheme": "https",
     "allowNavigation": ["*"]
   },
   "plugins": {
@@ -16,6 +16,9 @@
       "backgroundColor": "#242424",
       "androidSplashResourceName": "splash",
       "showSpinner": false
+    },
+    "CapacitorHttp": {
+      "enabled": true
     }
   },
   "android": {

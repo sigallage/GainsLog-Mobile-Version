@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import axios from "axios";
+import { apiClient, httpClient } from "../utils/httpClient";
 import "./recipeGenerator.css";
 
 const AUTH0_AUDIENCE = "gains-log-api";
@@ -24,7 +24,7 @@ const AIRecipeGenerator = () => {
   useEffect(() => {
     const fetchUserCountry = async () => {
       try {
-        const response = await axios.get("https://ipapi.co/json/");
+        const response = await httpClient.get("https://ipapi.co/json/");
         setCountry(response.data.country_name);
       } catch (error) {
         console.error("Error fetching country:", error);
@@ -76,7 +76,7 @@ const AIRecipeGenerator = () => {
 
       const prompt = `Generate a ${dietType} recipe with ${country} influences`;
       
-      const response = await axios.post(`${API_URL}/api/airecipes/generate`, {
+      const response = await apiClient.post("/api/airecipes/generate", {
         dietType,
         country,
         prompt,
