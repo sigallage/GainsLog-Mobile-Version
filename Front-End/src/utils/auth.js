@@ -1,9 +1,32 @@
 // src/utils/auth.js
 import { Capacitor } from '@capacitor/core';
 
+// More robust platform detection
+const isMobilePlatform = () => {
+  // Check multiple indicators for mobile platform
+  const capacitorNative = Capacitor.isNativePlatform();
+  const capacitorPlatform = Capacitor.getPlatform();
+  const userAgent = navigator.userAgent;
+  const isAndroidApp = userAgent.includes('wv') && userAgent.includes('Android'); // Android WebView
+  const hasCapacitorNative = window.Capacitor && window.Capacitor.isNative;
+  
+  console.log('Platform detection:', {
+    capacitorNative,
+    capacitorPlatform,
+    isAndroidApp,
+    hasCapacitorNative,
+    userAgent: userAgent.substring(0, 100)
+  });
+  
+  return capacitorNative || capacitorPlatform === 'android' || capacitorPlatform === 'ios' || isAndroidApp || hasCapacitorNative;
+};
+
 // Get the appropriate redirect URI based on platform
 export const getRedirectUri = () => {
-  if (Capacitor.isNativePlatform()) {
+  const isMobile = isMobilePlatform();
+  console.log('Is mobile platform:', isMobile);
+  
+  if (isMobile) {
     return "com.gainslog.app://callback";
   }
   return window.location.origin;

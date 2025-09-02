@@ -13,6 +13,7 @@ import AIRecipeGenerator from "./RecipeGenerator/recipeGenerator.jsx";
 import Profile from "./ProfilePage/Profile.jsx";
 import Contact from "./Contact Page/Contact.jsx";
 import AuthDebug from "./components/AuthDebug.jsx";
+import AuthStateManager from "./components/AuthStateManager.jsx";
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
         </Routes>
         <Footer />
         <AuthDebug />
+        <AuthStateManager />
       
     </Router>
   );

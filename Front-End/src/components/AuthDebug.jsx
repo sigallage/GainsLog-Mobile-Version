@@ -54,6 +54,8 @@ const AuthDebug = () => {
       </div>
       
       <div><strong>Platform:</strong> {Capacitor.isNativePlatform() ? '📱 Mobile' : '💻 Web'}</div>
+      <div><strong>Capacitor Platform:</strong> {Capacitor.getPlatform()}</div>
+      <div><strong>User Agent Mobile:</strong> {navigator.userAgent.includes('wv') && navigator.userAgent.includes('Android') ? 'Yes' : 'No'}</div>
       <div><strong>Redirect URI:</strong> {getRedirectUri()}</div>
       <div><strong>Loading:</strong> {isLoading ? '⏳ Yes' : '✅ No'}</div>
       <div><strong>Authenticated:</strong> {isAuthenticated ? '✅ Yes' : '❌ No'}</div>
