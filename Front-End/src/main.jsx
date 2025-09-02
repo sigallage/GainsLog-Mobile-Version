@@ -124,26 +124,29 @@ root.render(
       scope: "openid profile email write:workouts offline_access"
     }}
     useRefreshTokens={true}
-    cacheLocation={isMobilePlatform() ? "memory" : "localstorage"}
+    cacheLocation="localstorage"
+    // For mobile Capacitor apps, we need to handle CORS differently
+    httpTimeoutInSeconds={isMobilePlatform() ? 60 : 10}
+    // Enable the issuer verification for mobile
+    issuer={`https://dev-o87gtr0hl6pu381w.us.auth0.com/`}
     onRedirectCallback={(appState) => {
       console.log('Auth0 onRedirectCallback triggered:', appState);
       console.log('User should now be authenticated');
       
       const isMobile = isMobilePlatform();
       
-      // Clear the URL parameters
-      window.history.replaceState({}, '', window.location.pathname);
+      // Clear the URL parameters without reloading the page
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, '', cleanUrl);
       
-      // Navigate to the intended page or home
-      if (appState?.returnTo) {
-        window.location.href = appState.returnTo;
+      if (isMobile) {
+        console.log('Mobile auth completed - staying on current page to preserve auth state');
+        // Don't navigate away on mobile - just clear URL and stay put
+        // This preserves the authenticated state that was just established
       } else {
-        // For mobile, we might need a slight delay to ensure auth state is established
-        if (isMobile) {
-          console.log('Mobile auth completed, ensuring auth state is ready');
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 100);
+        // Navigate to the intended page or home for web
+        if (appState?.returnTo) {
+          window.location.href = appState.returnTo;
         }
       }
     }}

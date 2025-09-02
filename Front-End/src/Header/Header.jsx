@@ -18,7 +18,24 @@ const Header = () => {
   const { loginWithRedirect, logout } = useAuth0();
   const { isAuthenticated, isLoading, user } = useAuthStatus();
 
+  // Add more detailed debugging
   console.log('Header auth state:', { isAuthenticated, isLoading, user: user?.name });
+  
+  // Check if we're authenticated but not showing it
+  if (isAuthenticated && user) {
+    console.log('User is authenticated:', user.name);
+  } else if (!isAuthenticated && !isLoading) {
+    console.log('User is not authenticated');
+  }
+
+  // Debug auth state changes
+  React.useEffect(() => {
+    console.log('=== Auth State Check ===');
+    console.log('Authenticated:', isAuthenticated);
+    console.log('Loading:', isLoading);
+    console.log('User:', user?.name);
+    console.log('Platform: Mobile');
+  }, [isAuthenticated, isLoading, user]);
 
   const handleLogin = async () => {
     console.log('Header login clicked');
