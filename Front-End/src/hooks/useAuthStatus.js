@@ -12,6 +12,7 @@ const useAuthStatus = () => {
   } = useAuth0();
 
   const [authChecked, setAuthChecked] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   // Handle token refresh and auth state changes
   useEffect(() => {
@@ -38,20 +39,37 @@ const useAuthStatus = () => {
     if (!isLoading) {
       checkAuthState();
     }
-  }, [isAuthenticated, isLoading, getAccessTokenSilently, user]);
+  }, [isAuthenticated, isLoading, getAccessTokenSilently, user, forceUpdate]);
 
-  // Only sync auth state across tabs for web (not mobile)
+  // Listen for custom auth state changes (for mobile manual token exchange)
   useEffect(() => {
-    if (!Capacitor.isNativePlatform()) {
-      const handleStorageChange = (event) => {
-        if (event.key === '@@auth0spajs@@::xqrbTdmsTw4g7TfTVZVC5KGqPuq7sFrk') {
-          window.location.reload();
-        }
-      };
+    const handleAuthStateChange = (event) => {
+      console.log('Custom auth state change detected');
+      setForceUpdate(prev => prev + 1);
+    };
 
-      window.addEventListener('storage', handleStorageChange);
-      return () => window.removeEventListener('storage', handleStorageChange);
-    }
+    const handleStorageChange = (event) => {
+      if (event.key === 'auth0.is.authenticated' || 
+          event.key === 'auth0.cached.tokens' ||
+          event.key === 'auth0.cached.user') {
+        console.log('Auth storage change detected');
+        setForceUpdate(prev => prev + 1);
+      }
+      
+      // Also handle standard Auth0 storage changes for web
+      if (!Capacitor.isNativePlatform() && 
+          event.key === '@@auth0spajs@@::xqrbTdmsTw4g7TfTVZVC5KGqPuq7sFrk') {
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('authStateChanged', handleAuthStateChange);
+    window.addEventListener('storage', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('authStateChanged', handleAuthStateChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   return { 

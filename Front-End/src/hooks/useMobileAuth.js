@@ -97,29 +97,84 @@ export const useMobileAuth = () => {
       }
       
       if (code) {
-        console.log('Auth code received, processing authentication...');
+        console.log('Auth code received, exchanging for tokens...');
         
-        // Store the auth code temporarily
-        sessionStorage.setItem('auth_code', code);
-        if (state) {
-          sessionStorage.setItem('auth_state', state);
-        }
-        
-        // Use Auth0's handleRedirectCallback to process the authentication
-        // This is the proper way to handle the callback
         try {
-          console.log('Calling Auth0 handleRedirectCallback...');
+          // Exchange the authorization code for tokens
+          const tokenResponse = await fetch('https://dev-o87gtr0hl6pu381w.us.auth0.com/oauth/token', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              grant_type: 'authorization_code',
+              client_id: 'xqrbTdmsTw4g7TfTVZVC5KGqPuq7sFrk',
+              code: code,
+              redirect_uri: 'com.gainslog.app://callback'
+            })
+          });
           
-          // Construct the proper callback URL for Auth0
-          const authCallbackUrl = `${window.location.origin}/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
+          if (!tokenResponse.ok) {
+            throw new Error(`Token exchange failed: ${tokenResponse.status}`);
+          }
           
-          // Navigate to the callback URL and let Auth0 handle it
-          window.location.href = authCallbackUrl;
+          const tokens = await tokenResponse.json();
+          console.log('Tokens received successfully');
           
-        } catch (handleError) {
-          console.error('Error handling Auth0 callback:', handleError);
-          // Fallback: try a simple redirect
-          window.location.href = `${window.location.origin}/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
+          // Store tokens in localStorage (Auth0 format)
+          const authData = {
+            access_token: tokens.access_token,
+            id_token: tokens.id_token,
+            refresh_token: tokens.refresh_token,
+            token_type: tokens.token_type,
+            expires_in: tokens.expires_in,
+            scope: tokens.scope,
+            expires_at: Date.now() + (tokens.expires_in * 1000)
+          };
+          
+          // Store in the same format Auth0 expects
+          localStorage.setItem('auth0.is.authenticated', 'true');
+          localStorage.setItem('auth0.cached.tokens', JSON.stringify(authData));
+          
+          // Get user info
+          const userResponse = await fetch('https://dev-o87gtr0hl6pu381w.us.auth0.com/userinfo', {
+            headers: {
+              'Authorization': `Bearer ${tokens.access_token}`
+            }
+          });
+          
+          if (userResponse.ok) {
+            const userInfo = await userResponse.json();
+            localStorage.setItem('auth0.cached.user', JSON.stringify(userInfo));
+            console.log('User info stored:', userInfo.name);
+          }
+          
+          // Trigger a re-render by dispatching a storage event
+          window.dispatchEvent(new StorageEvent('storage', {
+            key: 'auth0.is.authenticated',
+            newValue: 'true'
+          }));
+          
+          // Also dispatch custom event for immediate UI update
+          window.dispatchEvent(new CustomEvent('authStateChanged', {
+            detail: { authenticated: true, user: userInfo }
+          }));
+          
+          console.log('Authentication completed successfully');
+          
+        } catch (tokenError) {
+          console.error('Token exchange error:', tokenError);
+          // Fallback to the URL method if token exchange fails
+          console.log('Falling back to URL-based auth processing');
+          
+          const currentUrl = new URL(window.location.href);
+          currentUrl.searchParams.set('code', code);
+          if (state) {
+            currentUrl.searchParams.set('state', state);
+          }
+          
+          window.history.replaceState({}, '', currentUrl.toString());
+          window.dispatchEvent(new PopStateEvent('popstate'));
         }
       }
     } catch (error) {
