@@ -146,19 +146,41 @@ const Header = () => {
                 </button>
                 <button 
                   onClick={() => {handleLogout(); setMenuOpen(false);}}
-                  className="sheet-auth-button"
+                  className="sheet-auth-button logout-btn"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <button className="sheet-auth-button" onClick={() => {handleLogin(); setMenuOpen(false);}}>
-                  Login
-                </button>
-                <button className="sheet-auth-button" onClick={() => {handleSignup(); setMenuOpen(false);}}>
-                  Sign Up
-                </button>
+                <div className="sheet-auth-options">
+                  <h4>Sign In to GainsLog</h4>
+                  <button 
+                    className="sheet-auth-button primary-login" 
+                    onClick={() => {handleLogin(); setMenuOpen(false);}}
+                  >
+                    🔐 Sign In with Google
+                  </button>
+                  <button 
+                    className="sheet-auth-button secondary-login" 
+                    onClick={() => {handleSignup(); setMenuOpen(false);}}
+                  >
+                    📝 Create Account
+                  </button>
+                  <button 
+                    className="sheet-auth-button guest-btn" 
+                    onClick={() => {
+                      localStorage.setItem('guestMode', 'true');
+                      setMenuOpen(false);
+                      window.location.reload();
+                    }}
+                  >
+                    👤 Continue as Guest
+                  </button>
+                  <small className="auth-note">
+                    Sign in to save your workouts and track progress
+                  </small>
+                </div>
               </>
             )}
           </div>

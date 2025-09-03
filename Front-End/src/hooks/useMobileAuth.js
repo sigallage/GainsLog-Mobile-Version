@@ -105,9 +105,22 @@ export const useMobileAuth = () => {
           sessionStorage.setItem('auth_state', state);
         }
         
-        // Force a page reload to let Auth0 process the authentication
-        // This ensures the auth state is properly updated
-        window.location.href = `${window.location.origin}/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
+        // Use Auth0's handleRedirectCallback to process the authentication
+        // This is the proper way to handle the callback
+        try {
+          console.log('Calling Auth0 handleRedirectCallback...');
+          
+          // Construct the proper callback URL for Auth0
+          const authCallbackUrl = `${window.location.origin}/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
+          
+          // Navigate to the callback URL and let Auth0 handle it
+          window.location.href = authCallbackUrl;
+          
+        } catch (handleError) {
+          console.error('Error handling Auth0 callback:', handleError);
+          // Fallback: try a simple redirect
+          window.location.href = `${window.location.origin}/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
+        }
       }
     } catch (error) {
       console.error('Error handling auth callback:', error);

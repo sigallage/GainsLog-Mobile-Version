@@ -44,8 +44,13 @@ const MobileAuthHandler = ({ children }) => {
           if (code && state) {
             console.log('Auth code received, processing callback');
             
+            // Store the auth parameters temporarily
+            sessionStorage.setItem('auth_processing', 'true');
+            sessionStorage.setItem('auth_code', code);
+            sessionStorage.setItem('auth_state', state);
+            
             // Navigate to the app with the auth parameters so Auth0 can process them
-            const callbackUrl = `${window.location.origin}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
+            const callbackUrl = `${window.location.origin}/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
             console.log('Navigating to:', callbackUrl);
             
             // Use location.href to trigger Auth0's callback processing
@@ -128,9 +133,19 @@ root.render(
       
       const isMobile = isMobilePlatform();
       
-      // Clear the URL parameters without reloading the page
-      const cleanUrl = window.location.origin + window.location.pathname;
-      window.history.replaceState({}, '', cleanUrl);
+      // Clear the auth processing flag
+      sessionStorage.removeItem('auth_processing');
+      sessionStorage.removeItem('auth_code');
+      sessionStorage.removeItem('auth_state');
+      
+      // Wait a moment for Auth0 to fully process the authentication
+      setTimeout(() => {
+        // Clear the URL parameters without reloading the page
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, '', cleanUrl);
+        
+        console.log('Authentication completed - URL cleared');
+      }, 1000);
       
       if (isMobile) {
         console.log('Mobile auth completed - staying on current page to preserve auth state');

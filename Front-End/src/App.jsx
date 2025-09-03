@@ -17,7 +17,6 @@ import AuthDebug from "./components/AuthDebug.jsx";
 import AuthStateManager from "./components/AuthStateManager.jsx";
 import CustomSplashScreen from "./components/SplashScreen/SplashScreen.jsx";
 import AuthDebugPanel from "./components/AuthDebugPanel.jsx";
-import SimpleLoginScreen from "./components/SimpleLoginScreen/SimpleLoginScreen.jsx";
 import useAuthStatus from './hooks/useAuthStatus';
 
 function App() {
@@ -31,26 +30,21 @@ function App() {
     const state = urlParams.get('state');
     
     if (code && !isAuthenticated && !isLoading) {
-      console.log('Auth callback detected, refreshing authentication state...');
+      console.log('Auth callback detected, processing authentication...');
       // Clear URL params to prevent loops
       window.history.replaceState({}, document.title, window.location.pathname);
-      // Force a complete page reload to ensure Auth0 processes the callback
+      
+      // Give Auth0 time to process the authentication
       setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+        if (!isAuthenticated) {
+          console.log('Auth state not updated, forcing reload...');
+          window.location.reload();
+        }
+      }, 2000);
     }
   }, [isAuthenticated, isLoading]);
   
-  // Show login screen if not authenticated and not in guest mode
-  if (!isLoading && !isAuthenticated && !isGuestMode) {
-    return (
-      <CustomSplashScreen isLoading={isLoading}>
-        <SimpleLoginScreen />
-        <AuthDebugPanel />
-      </CustomSplashScreen>
-    );
-  }
-  
+  // Always show the main app - authentication is handled by the header
   return (
     <CustomSplashScreen isLoading={isLoading}>
       <Router>

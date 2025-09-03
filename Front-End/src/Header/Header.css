@@ -166,3 +166,82 @@ body {
 .logout-btn:hover {
   background-color: darkred;
 }
+
+/* Enhanced authentication section styles */
+.sheet-auth-options {
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+}
+
+.sheet-auth-options h4 {
+  margin: 0 0 20px 0;
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+}
+
+.sheet-auth-button {
+  width: 100%;
+  padding: 15px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.sheet-auth-button.primary-login {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.sheet-auth-button.primary-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.sheet-auth-button.secondary-login {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.sheet-auth-button.secondary-login:hover {
+  background: #667eea;
+  color: white;
+}
+
+.sheet-auth-button.guest-btn {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+  font-size: 0.9rem;
+}
+
+.sheet-auth-button.guest-btn:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.sheet-auth-button.logout-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.sheet-auth-button.logout-btn:hover {
+  background: #c82333;
+}
+
+.auth-note {
+  display: block;
+  margin-top: 15px;
+  color: #6c757d;
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1.4;
+}
