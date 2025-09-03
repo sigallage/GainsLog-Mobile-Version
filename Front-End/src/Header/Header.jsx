@@ -14,11 +14,27 @@ const Header = () => {
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   // Auth0 hooks
   const { loginWithRedirect, logout } = useAuth0();
   const { isAuthenticated, isLoading, user } = useAuthStatus();
   const { login: mobileLogin, logout: mobileLogout, isMobile } = useMobileAuth();
+
+  // Listen for auth state changes
+  React.useEffect(() => {
+    const handleAuthStateChange = (event) => {
+      console.log('Auth state change event received:', event.detail);
+      // Force a re-render to update the UI
+      setForceUpdate(prev => prev + 1);
+    };
+
+    window.addEventListener('authStateChanged', handleAuthStateChange);
+    
+    return () => {
+      window.removeEventListener('authStateChanged', handleAuthStateChange);
+    };
+  }, []);
 
   // Add more detailed debugging
   console.log('Header auth state:', { isAuthenticated, isLoading, user: user?.name });
@@ -37,7 +53,7 @@ const Header = () => {
     console.log('Loading:', isLoading);
     console.log('User:', user?.name);
     console.log('Platform: Mobile');
-  }, [isAuthenticated, isLoading, user]);
+  }, [isAuthenticated, isLoading, user, forceUpdate]);
 
   const handleLogin = async () => {
     console.log('Header login clicked');

@@ -18,7 +18,7 @@ const isMobilePlatform = () => {
   return capacitorNative || capacitorPlatform === 'android' || capacitorPlatform === 'ios' || isAndroidApp || hasCapacitorNative;
 };
 
-// Mobile Auth Handler with simplified callback processing
+// Mobile Auth Handler with improved callback processing
 const MobileAuthHandler = ({ children }) => {
   useEffect(() => {
     const isMobile = isMobilePlatform();
@@ -44,17 +44,22 @@ const MobileAuthHandler = ({ children }) => {
           if (code && state) {
             console.log('Auth code received, processing callback');
             
-            // Store the auth parameters temporarily
-            sessionStorage.setItem('auth_processing', 'true');
-            sessionStorage.setItem('auth_code', code);
-            sessionStorage.setItem('auth_state', state);
+            // Store the auth success flag
+            sessionStorage.setItem('auth_success', 'true');
+            sessionStorage.setItem('auth_timestamp', Date.now().toString());
             
-            // Navigate to the app with the auth parameters so Auth0 can process them
-            const callbackUrl = `${window.location.origin}/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
-            console.log('Navigating to:', callbackUrl);
+            // Instead of navigating, just update the current URL without reload
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set('code', code);
+            currentUrl.searchParams.set('state', state);
             
-            // Use location.href to trigger Auth0's callback processing
-            window.location.href = callbackUrl;
+            console.log('Updating URL for Auth0 processing:', currentUrl.toString());
+            
+            // Update URL without reload to trigger Auth0's handleRedirectCallback
+            window.history.replaceState({}, '', currentUrl.toString());
+            
+            // Dispatch a custom event to notify Auth0 of the URL change
+            window.dispatchEvent(new PopStateEvent('popstate'));
           }
         } catch (error) {
           console.error('Error processing auth callback:', error);
@@ -133,24 +138,31 @@ root.render(
       
       const isMobile = isMobilePlatform();
       
-      // Clear the auth processing flag
+      // Clear any processing flags
       sessionStorage.removeItem('auth_processing');
       sessionStorage.removeItem('auth_code');
       sessionStorage.removeItem('auth_state');
       
-      // Wait a moment for Auth0 to fully process the authentication
-      setTimeout(() => {
-        // Clear the URL parameters without reloading the page
+      // Mark authentication as successful
+      sessionStorage.setItem('auth_completed', 'true');
+      sessionStorage.setItem('auth_completion_time', Date.now().toString());
+      
+      // For mobile, clear the URL parameters without reloading
+      if (isMobile) {
+        console.log('Mobile auth completed - cleaning URL');
+        
+        // Clear URL parameters without reload
         const cleanUrl = window.location.origin + window.location.pathname;
         window.history.replaceState({}, '', cleanUrl);
         
-        console.log('Authentication completed - URL cleared');
-      }, 1000);
-      
-      if (isMobile) {
-        console.log('Mobile auth completed - staying on current page to preserve auth state');
-        // Don't navigate away on mobile - just clear URL and stay put
-        // This preserves the authenticated state that was just established
+        // Force a re-render to update auth state
+        setTimeout(() => {
+          console.log('Authentication state should now be updated');
+          // Trigger a custom event to notify components of auth success
+          window.dispatchEvent(new CustomEvent('authStateChanged', { 
+            detail: { authenticated: true } 
+          }));
+        }, 500);
       } else {
         // Navigate to the intended page or home for web
         if (appState?.returnTo) {
