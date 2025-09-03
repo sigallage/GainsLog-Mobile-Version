@@ -96,12 +96,18 @@ export const useMobileAuth = () => {
         throw new Error(`Authentication failed: ${error}`);
       }
       
-      if (code && state) {
-        console.log('Auth code received, redirecting to process...');
+      if (code) {
+        console.log('Auth code received, processing authentication...');
         
-        // Redirect to our app with the auth parameters for Auth0 to process
-        const processUrl = `${window.location.origin}/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
-        window.location.href = processUrl;
+        // Store the auth code temporarily
+        sessionStorage.setItem('auth_code', code);
+        if (state) {
+          sessionStorage.setItem('auth_state', state);
+        }
+        
+        // Force a page reload to let Auth0 process the authentication
+        // This ensures the auth state is properly updated
+        window.location.href = `${window.location.origin}/?code=${encodeURIComponent(code)}${state ? `&state=${encodeURIComponent(state)}` : ''}`;
       }
     } catch (error) {
       console.error('Error handling auth callback:', error);

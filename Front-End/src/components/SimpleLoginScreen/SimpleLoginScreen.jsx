@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useMobileAuth } from '../../hooks/useMobileAuth';
 import { Browser } from '@capacitor/browser';
@@ -9,22 +9,49 @@ const SimpleLoginScreen = () => {
   const { loginWithRedirect } = useAuth0();
   const { login: mobileLogin, isLoading, isMobile } = useMobileAuth();
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [buttonLoading, setButtonLoading] = useState(false);
+
+  // Clear messages after some time
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const handleMobileLogin = async () => {
     setError(null);
+    setSuccess(null);
+    setButtonLoading(true);
+    
     try {
       console.log('Mobile login button clicked - starting authentication');
+      setSuccess('Opening secure browser for authentication...');
       await mobileLogin();
     } catch (error) {
       console.error('Mobile login failed:', error);
-      setError('Mobile login failed. Try web login below.');
+      setError('Mobile login failed. Try web login below or check your connection.');
+    } finally {
+      setButtonLoading(false);
     }
   };
 
   const handleWebLogin = async () => {
     setError(null);
+    setSuccess(null);
+    setButtonLoading(true);
+    
     try {
       console.log('Web login button clicked');
+      setSuccess('Redirecting to authentication...');
       
       // Direct web URL that bypasses Google's mobile browser restrictions
       const webLoginUrl = `https://dev-o87gtr0hl6pu381w.us.auth0.com/authorize?` +
@@ -55,15 +82,22 @@ const SimpleLoginScreen = () => {
       }
     } catch (error) {
       console.error('Web login failed:', error);
-      setError('Web login failed. Please try again.');
+      setError('Web login failed. Please try again or check your connection.');
+    } finally {
+      setButtonLoading(false);
     }
   };
 
   const handleGuestMode = () => {
     console.log('Guest mode selected');
+    setSuccess('Entering guest mode...');
     localStorage.setItem('guestMode', 'true');
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
+
+  const isAnyLoading = isLoading || buttonLoading;
 
   return (
     <div className="simple-login-screen">
@@ -72,55 +106,51 @@ const SimpleLoginScreen = () => {
         <p className="app-subtitle">Track Your Fitness Journey</p>
         
         {error && (
-          <div style={{ 
-            color: '#ff6b6b', 
-            background: '#ffe0e0', 
-            padding: '10px', 
-            borderRadius: '8px', 
-            marginBottom: '20px',
-            fontSize: '0.9rem'
-          }}>
+          <div className="error-message">
             ⚠️ {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="success-message">
+            ✅ {success}
           </div>
         )}
         
         <div className="login-methods">
           <button 
-            className="login-btn primary" 
+            className={`login-btn primary ${isAnyLoading ? 'loading' : ''}`}
             onClick={handleMobileLogin}
-            disabled={isLoading}
+            disabled={isAnyLoading}
           >
-            {isLoading ? 'Signing In...' : '🔐 Sign In (Recommended)'}
+            {isAnyLoading ? '' : '🔐 Sign In with Google (Recommended)'}
           </button>
           
           <button 
-            className="login-btn secondary" 
+            className={`login-btn secondary ${isAnyLoading ? 'loading' : ''}`}
             onClick={handleWebLogin}
-            disabled={isLoading}
+            disabled={isAnyLoading}
           >
-            🌐 Web Login (Alternative)
+            {isAnyLoading ? '' : '🌐 Web Login (Alternative)'}
           </button>
           
           <button 
-            className="login-btn secondary" 
+            className="login-btn guest" 
             onClick={handleGuestMode}
+            disabled={isAnyLoading}
           >
             👤 Continue as Guest
           </button>
-          
-          <div className="platform-info">
-            <small>Platform: {Capacitor.getPlatform()} | Mobile: {isMobile ? 'Yes' : 'No'}</small>
-          </div>
+        </div>
+        
+        <div className="platform-info">
+          Platform: {isMobile ? 'Mobile' : 'Web'} • {isMobile ? 'Android' : 'Browser'}
         </div>
         
         <div className="login-help">
-          <p><strong>Having trouble with Google login?</strong></p>
-          <p>
-            {isMobile 
-              ? '• Try "Recommended" first - opens secure external browser\n• If blocked, use "Web Login" option\n• Guest mode for testing without login'
-              : 'Use any login method to authenticate with Auth0'
-            }
-          </p>
+          <p><strong>🔐 Recommended:</strong> Uses your device's secure browser</p>
+          <p><strong>🌐 Alternative:</strong> Fallback web authentication</p>
+          <p><strong>👤 Guest Mode:</strong> Explore app features without account</p>
         </div>
       </div>
     </div>

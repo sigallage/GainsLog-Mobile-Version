@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 import Header from "./Header/Header.jsx";
@@ -22,6 +23,23 @@ import useAuthStatus from './hooks/useAuthStatus';
 function App() {
   const { isLoading, isAuthenticated } = useAuthStatus();
   const isGuestMode = localStorage.getItem('guestMode') === 'true';
+  
+  // Check for auth callback parameters and force refresh if needed
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+    
+    if (code && !isAuthenticated && !isLoading) {
+      console.log('Auth callback detected, refreshing authentication state...');
+      // Clear URL params to prevent loops
+      window.history.replaceState({}, document.title, window.location.pathname);
+      // Force a complete page reload to ensure Auth0 processes the callback
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+  }, [isAuthenticated, isLoading]);
   
   // Show login screen if not authenticated and not in guest mode
   if (!isLoading && !isAuthenticated && !isGuestMode) {
