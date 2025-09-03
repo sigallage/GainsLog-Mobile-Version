@@ -14,12 +14,28 @@ import Profile from "./ProfilePage/Profile.jsx";
 import Contact from "./Contact Page/Contact.jsx";
 import AuthDebug from "./components/AuthDebug.jsx";
 import AuthStateManager from "./components/AuthStateManager.jsx";
-
+import CustomSplashScreen from "./components/SplashScreen/SplashScreen.jsx";
+import AuthDebugPanel from "./components/AuthDebugPanel.jsx";
+import SimpleLoginScreen from "./components/SimpleLoginScreen/SimpleLoginScreen.jsx";
+import useAuthStatus from './hooks/useAuthStatus';
 
 function App() {
+  const { isLoading, isAuthenticated } = useAuthStatus();
+  const isGuestMode = localStorage.getItem('guestMode') === 'true';
+  
+  // Show login screen if not authenticated and not in guest mode
+  if (!isLoading && !isAuthenticated && !isGuestMode) {
+    return (
+      <CustomSplashScreen isLoading={isLoading}>
+        <SimpleLoginScreen />
+        <AuthDebugPanel />
+      </CustomSplashScreen>
+    );
+  }
+  
   return (
-    <Router>
-
+    <CustomSplashScreen isLoading={isLoading}>
+      <Router>
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -36,8 +52,9 @@ function App() {
         <Footer />
         <AuthDebug />
         <AuthStateManager />
-      
-    </Router>
+        <AuthDebugPanel />
+      </Router>
+    </CustomSplashScreen>
   );
 }
 

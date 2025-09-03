@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa"; // Profile Icon
 import { useAuth0 } from "@auth0/auth0-react"; // Import Auth0 Hook
 import { performLogin, performLogout } from "../utils/auth";
+import { useMobileAuth } from "../hooks/useMobileAuth";
 import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetClose } from "../components/ui/sheet";
 import "../components/ui/sheet.css";
 import "./Header.css";
@@ -17,6 +18,7 @@ const Header = () => {
   // Auth0 hooks
   const { loginWithRedirect, logout } = useAuth0();
   const { isAuthenticated, isLoading, user } = useAuthStatus();
+  const { login: mobileLogin, logout: mobileLogout, isMobile } = useMobileAuth();
 
   // Add more detailed debugging
   console.log('Header auth state:', { isAuthenticated, isLoading, user: user?.name });
@@ -40,23 +42,34 @@ const Header = () => {
   const handleLogin = async () => {
     console.log('Header login clicked');
     try {
-      await performLogin(loginWithRedirect, {
-        returnTo: window.location.pathname
-      });
+      if (isMobile) {
+        // Use the improved mobile login with external browser
+        await mobileLogin();
+      } else {
+        await performLogin(loginWithRedirect, {
+          returnTo: window.location.pathname
+        });
+      }
     } catch (error) {
       console.error('Header login failed:', error);
+      // Show user-friendly error
+      alert('Login failed. Please try the alternative login options in the app.');
     }
   };
 
   const handleSignup = async () => {
     console.log('Header signup clicked');
     try {
-      await performLogin(loginWithRedirect, {
-        returnTo: window.location.pathname,
-        authorizationParams: {
-          screen_hint: "signup"
-        }
-      });
+      if (isMobile) {
+        await mobileLogin();
+      } else {
+        await performLogin(loginWithRedirect, {
+          returnTo: window.location.pathname,
+          authorizationParams: {
+            screen_hint: "signup"
+          }
+        });
+      }
     } catch (error) {
       console.error('Header signup failed:', error);
     }
@@ -64,7 +77,11 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      await performLogout(logout);
+      if (isMobile) {
+        mobileLogout();
+      } else {
+        await performLogout(logout);
+      }
     } catch (error) {
       console.error('Header logout failed:', error);
     }

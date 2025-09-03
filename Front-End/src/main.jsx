@@ -18,10 +18,8 @@ const isMobilePlatform = () => {
   return capacitorNative || capacitorPlatform === 'android' || capacitorPlatform === 'ios' || isAndroidApp || hasCapacitorNative;
 };
 
-// Mobile Auth Handler with improved callback processing
+// Mobile Auth Handler with simplified callback processing
 const MobileAuthHandler = ({ children }) => {
-  const [authProcessing, setAuthProcessing] = useState(false);
-
   useEffect(() => {
     const isMobile = isMobilePlatform();
     console.log('Mobile platform detected:', isMobile);
@@ -29,6 +27,42 @@ const MobileAuthHandler = ({ children }) => {
     if (isMobile) {
       console.log('Setting up mobile auth handler');
       
+      const handleAuthCallback = async (url) => {
+        console.log('Auth callback received:', url);
+        
+        try {
+          const urlObj = new URL(url);
+          const code = urlObj.searchParams.get('code');
+          const state = urlObj.searchParams.get('state');
+          const error = urlObj.searchParams.get('error');
+          
+          if (error) {
+            console.error('Auth0 error in callback:', error);
+            return;
+          }
+          
+          if (code && state) {
+            console.log('Auth code received, processing callback');
+            
+            // Navigate to the app with the auth parameters so Auth0 can process them
+            const callbackUrl = `${window.location.origin}?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
+            console.log('Navigating to:', callbackUrl);
+            
+            // Use location.href to trigger Auth0's callback processing
+            window.location.href = callbackUrl;
+          }
+        } catch (error) {
+          console.error('Error processing auth callback:', error);
+        }
+      };
+
+      const handleAppUrlOpen = (event) => {
+        console.log('Deep link received:', event.url);
+        if (event.url.includes('com.gainslog.app://callback')) {
+          handleAuthCallback(event.url);
+        }
+      };
+
       // Check if we're returning from an auth callback on app startup
       const checkInitialUrl = async () => {
         try {
@@ -42,47 +76,6 @@ const MobileAuthHandler = ({ children }) => {
         }
       };
 
-      const handleAuthCallback = (url) => {
-        console.log('Processing auth callback:', url);
-        setAuthProcessing(true);
-        
-        try {
-          const urlObj = new URL(url);
-          const code = urlObj.searchParams.get('code');
-          const state = urlObj.searchParams.get('state');
-          const error = urlObj.searchParams.get('error');
-          
-          if (error) {
-            console.error('Auth0 error in callback:', error);
-            setAuthProcessing(false);
-            return;
-          }
-          
-          if (code && state) {
-            console.log('Auth code received, processing callback');
-            
-            // Instead of manually processing, redirect to our app with the auth params
-            // This lets Auth0 handle the callback properly
-            const callbackUrl = `${window.location.origin}/?code=${encodeURIComponent(code)}&state=${encodeURIComponent(state)}`;
-            
-            console.log('Redirecting to callback URL for Auth0 processing:', callbackUrl);
-            
-            // Direct redirect to let Auth0 handle the callback
-            window.location.href = callbackUrl;
-          }
-        } catch (error) {
-          console.error('Error processing auth callback:', error);
-          setAuthProcessing(false);
-        }
-      };
-
-      const handleAppUrlOpen = (event) => {
-        console.log('Deep link received:', event.url);
-        if (event.url.includes('com.gainslog.app://callback')) {
-          handleAuthCallback(event.url);
-        }
-      };
-
       // Set up listeners
       CapacitorApp.addListener('appUrlOpen', handleAppUrlOpen);
       
@@ -93,7 +86,7 @@ const MobileAuthHandler = ({ children }) => {
         CapacitorApp.removeAllListeners();
       };
     }
-  }, [authProcessing]);
+  }, []);
 
   return children;
 };

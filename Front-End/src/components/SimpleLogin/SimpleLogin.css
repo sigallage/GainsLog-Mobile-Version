@@ -1,0 +1,122 @@
+.simple-login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(5px);
+}
+
+.simple-login-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-header h2 {
+  color: #ff4444;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.login-header p {
+  color: #ccc;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-btn {
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.login-btn.primary {
+  background: linear-gradient(135deg, #ff4444 0%, #cc3333 100%);
+  color: white;
+}
+
+.login-btn.primary:hover {
+  background: linear-gradient(135deg, #ff6666 0%, #ff4444 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(255, 68, 68, 0.3);
+}
+
+.login-btn.secondary {
+  background: linear-gradient(135deg, #333 0%, #444 100%);
+  color: white;
+  border: 1px solid #555;
+}
+
+.login-btn.secondary:hover {
+  background: linear-gradient(135deg, #444 0%, #555 100%);
+  transform: translateY(-2px);
+}
+
+.login-btn.tertiary {
+  background: transparent;
+  color: #ccc;
+  border: 1px solid #555;
+}
+
+.login-btn.tertiary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.mobile-note {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(255, 68, 68, 0.1);
+  border-radius: 10px;
+  border-left: 4px solid #ff4444;
+}
+
+.mobile-note p {
+  color: #ff9999;
+  margin: 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .simple-login-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .login-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .login-btn {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+  }
+}
