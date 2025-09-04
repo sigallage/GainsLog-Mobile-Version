@@ -7,6 +7,25 @@ import useAuthStatus from '../hooks/useAuthStatus';
 const AuthDebug = () => {
   const { isAuthenticated, isLoading, user, error } = useAuthStatus();
   const [logs, setLogs] = useState([]);
+  const [debugInfo, setDebugInfo] = useState({});
+
+  useEffect(() => {
+    // Log current auth state to console for debugging
+    console.log('=== AuthDebug Component State ===');
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('isLoading:', isLoading);
+    console.log('user:', user);
+    console.log('error:', error);
+    
+    // Update debug info state
+    setDebugInfo({
+      isAuthenticated,
+      isLoading,
+      user,
+      error,
+      timestamp: new Date().toLocaleTimeString()
+    });
+  }, [isAuthenticated, isLoading, user, error]);
 
   useEffect(() => {
     // Capture console logs for debugging
@@ -29,25 +48,28 @@ const AuthDebug = () => {
     };
   }, []);
 
-  if (process.env.NODE_ENV === 'production') {
-    return null; // Don't show in production
-  }
+  // Always show in development, don't hide in production for now
+  // if (process.env.NODE_ENV === 'production') {
+  //   return null;
+  // }
 
   return (
     <div style={{
       position: 'fixed',
       bottom: '10px',
       left: '10px',
-      background: 'rgba(0,0,0,0.9)',
+      background: 'rgba(0,0,0,0.95)',
       color: 'white',
       padding: '15px',
       borderRadius: '8px',
-      fontSize: '11px',
-      zIndex: 9999,
+      fontSize: '12px',
+      zIndex: 99999,
       maxWidth: '350px',
-      maxHeight: '300px',
+      maxHeight: '400px',
       overflow: 'auto',
-      fontFamily: 'monospace'
+      fontFamily: 'monospace',
+      border: '2px solid #4CAF50',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.3)'
     }}>
       <div style={{ marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>
         Auth Debug Panel
@@ -55,13 +77,14 @@ const AuthDebug = () => {
       
       <div><strong>Platform:</strong> {Capacitor.getPlatform()}</div>
       <div><strong>Mobile:</strong> {Capacitor.isNativePlatform() ? 'Yes' : 'No'}</div>
-      <div><strong>Loading:</strong> {isLoading ? 'Yes' : 'No'}</div>
-      <div><strong>Authenticated:</strong> {isAuthenticated ? 'Yes' : 'No'}</div>
-      <div><strong>User:</strong> {user?.name || user?.nickname || 'None'}</div>
+      <div><strong>Loading:</strong> {debugInfo.isLoading ? 'Yes' : 'No'}</div>
+      <div><strong>Authenticated:</strong> {debugInfo.isAuthenticated ? 'Yes' : 'No'}</div>
+      <div><strong>User:</strong> {debugInfo.user?.name || debugInfo.user?.nickname || 'None'}</div>
+      <div><strong>Last Update:</strong> {debugInfo.timestamp || 'Never'}</div>
       
-      {error && (
+      {debugInfo.error && (
         <div style={{ color: '#f44336', marginTop: '5px' }}>
-          <strong>Error:</strong> {error.message}
+          <strong>Error:</strong> {debugInfo.error.message}
         </div>
       )}
       
