@@ -1,6 +1,6 @@
 # GainsLog Android App Build Guide
 
-Your React web application has been successfully converted to an Android app using Capacitor! 🎉
+Your React web application has been successfully converted to an Android app using Capacitor!
 
 ## Prerequisites
 
@@ -56,18 +56,18 @@ npx cap open android
 
 ## Mobile Optimizations Added
 
-### 🎨 UI/UX Improvements
+### UI/UX Improvements
 - Touch-friendly button sizes (minimum 44px)
 - Responsive design for mobile screens
 - Disabled zoom on input focus
 - Optimized tap highlighting
 
-### 📱 Native Features
+### Native Features
 - **Status Bar**: Styled to match app theme
 - **Splash Screen**: 2-second branded loading screen
 - **Mobile Meta Tags**: Proper viewport and mobile-web-app settings
 
-### 🚀 Performance
+### Performance
 - Production-optimized builds
 - Asset compression
 - Native navigation performance
@@ -142,4 +142,4 @@ Your backend server needs to be accessible from the mobile app:
 4. Prepare for Google Play Store submission
 5. Consider adding offline functionality
 
-Happy coding! 🚀
+Happy coding!

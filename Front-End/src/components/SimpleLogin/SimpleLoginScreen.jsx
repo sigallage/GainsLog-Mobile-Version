@@ -51,7 +51,7 @@ const SimpleLoginScreen = ({ onClose }) => {
 
         {isMobile && (
           <div className="mobile-note">
-            <p>📱 For the best login experience, we'll open your web browser</p>
+            <p>For the best login experience, we'll open your web browser</p>
           </div>
         )}
       </div>

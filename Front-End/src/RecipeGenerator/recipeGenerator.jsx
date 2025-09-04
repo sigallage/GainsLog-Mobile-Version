@@ -109,7 +109,7 @@ const AIRecipeGenerator = () => {
 
   return (
     <div className="ai-recipe-generator">
-      <h2>🍽️ AI-Powered Recipe Generator</h2>
+      <h2>AI-Powered Recipe Generator</h2>
 
       <label>Diet Type:</label>
       <select value={dietType} onChange={(e) => setDietType(e.target.value)}>
@@ -146,7 +146,7 @@ const AIRecipeGenerator = () => {
 
       {recipe && (
         <div className="recipe-output">
-          <h3>🧑‍🍳 Your Custom Recipe:</h3>
+          <h3>Your Custom Recipe:</h3>
           <pre>{recipe}</pre>
         </div>
       )}

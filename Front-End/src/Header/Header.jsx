@@ -175,13 +175,13 @@ const Header = () => {
                     className="sheet-auth-button primary-login" 
                     onClick={() => {handleLogin(); setMenuOpen(false);}}
                   >
-                    🔐 Sign In with Google
+                    Sign In with Google
                   </button>
                   <button 
                     className="sheet-auth-button secondary-login" 
                     onClick={() => {handleSignup(); setMenuOpen(false);}}
                   >
-                    📝 Create Account
+                    Create Account
                   </button>
                   <button 
                     className="sheet-auth-button guest-btn" 
@@ -191,7 +191,7 @@ const Header = () => {
                       window.location.reload();
                     }}
                   >
-                    👤 Continue as Guest
+                    Continue as Guest
                   </button>
                   <small className="auth-note">
                     Sign in to save your workouts and track progress

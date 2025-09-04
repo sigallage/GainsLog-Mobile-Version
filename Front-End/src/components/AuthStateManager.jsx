@@ -90,12 +90,12 @@ const AuthStateManager = () => {
       fontFamily: 'monospace'
     }}>
       <div style={{ fontWeight: 'bold', marginBottom: '5px' }}>
-        🔐 Auth Status
+        Auth Status
       </div>
       
-      <div>Auth: {isAuthenticated ? '✅' : '❌'}</div>
-      <div>Loading: {isLoading ? '⏳' : '✅'}</div>
-      <div>Token: {tokenStatus === 'success' ? '✅' : tokenStatus === 'failed' ? '❌' : '❓'}</div>
+      <div>Auth: {isAuthenticated ? 'Yes' : 'No'}</div>
+      <div>Loading: {isLoading ? 'Loading' : 'Ready'}</div>
+      <div>Token: {tokenStatus === 'success' ? 'Valid' : tokenStatus === 'failed' ? 'Invalid' : 'Unknown'}</div>
       <div>Checks: {authChecks}</div>
       
       {error && (

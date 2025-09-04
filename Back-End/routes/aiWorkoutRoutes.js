@@ -93,21 +93,21 @@ router.post('/generate', async (req, res) => {
   // Ultimate fallback - Hardcoded workouts
   const fallbackWorkouts = {
     beginner: {
-      strength: `🏋️ Warm-up:
+      strength: `Warm-up:
 1. Bodyweight squats - 2x10
 2. Arm circles - 1min
 
-🔥 Main Workout:
+Main Workout:
 1. Push-ups - 3x8
 2. Dumbbell rows - 3x10
 3. Bodyweight lunges - 3x8 per leg
 
-🧘 Cooldown:
+Cooldown:
 1. Hamstring stretch - 30sec
 2. Chest stretch - 30sec`
     },
     intermediate: {
-      hiit: `🔥 HIIT Workout (40s work/20s rest):
+      hiit: `HIIT Workout (40s work/20s rest):
 1. Jump squats
 2. Burpees
 3. Mountain climbers

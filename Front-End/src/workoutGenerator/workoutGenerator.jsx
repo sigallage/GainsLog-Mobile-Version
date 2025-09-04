@@ -92,7 +92,7 @@ const WorkoutGenerator = () => {
 
   return (
     <div className="workout-generator">
-      <h2>💪 AI-Powered Workout Generator</h2>
+      <h2>AI-Powered Workout Generator</h2>
 
       <label>Fitness Level:</label>
       <select value={level} onChange={(e) => setLevel(e.target.value)}>
@@ -132,7 +132,7 @@ const WorkoutGenerator = () => {
 
       {workout && (
         <div className="workout-output">
-          <h3>🏋️ Your Workout Plan:</h3>
+          <h3>Your Workout Plan:</h3>
           <pre>{workout}</pre>
         </div>
       )}

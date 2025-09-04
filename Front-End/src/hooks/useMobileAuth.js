@@ -137,6 +137,7 @@ export const useMobileAuth = () => {
           localStorage.setItem('auth0.cached.tokens', JSON.stringify(authData));
           
           // Get user info
+          let userInfo = null;
           const userResponse = await fetch('https://dev-o87gtr0hl6pu381w.us.auth0.com/userinfo', {
             headers: {
               'Authorization': `Bearer ${tokens.access_token}`
@@ -144,7 +145,7 @@ export const useMobileAuth = () => {
           });
           
           if (userResponse.ok) {
-            const userInfo = await userResponse.json();
+            userInfo = await userResponse.json();
             localStorage.setItem('auth0.cached.user', JSON.stringify(userInfo));
             console.log('User info stored:', userInfo.name);
           }

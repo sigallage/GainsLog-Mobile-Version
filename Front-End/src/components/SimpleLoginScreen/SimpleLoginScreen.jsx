@@ -107,13 +107,13 @@ const SimpleLoginScreen = () => {
         
         {error && (
           <div className="error-message">
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
         {success && (
           <div className="success-message">
-            ✅ {success}
+            {success}
           </div>
         )}
         
@@ -123,7 +123,7 @@ const SimpleLoginScreen = () => {
             onClick={handleMobileLogin}
             disabled={isAnyLoading}
           >
-            {isAnyLoading ? '' : '🔐 Sign In with Google (Recommended)'}
+            {isAnyLoading ? '' : 'Sign In with Google (Recommended)'}
           </button>
           
           <button 
@@ -131,7 +131,7 @@ const SimpleLoginScreen = () => {
             onClick={handleWebLogin}
             disabled={isAnyLoading}
           >
-            {isAnyLoading ? '' : '🌐 Web Login (Alternative)'}
+            {isAnyLoading ? '' : 'Web Login (Alternative)'}
           </button>
           
           <button 
@@ -139,7 +139,7 @@ const SimpleLoginScreen = () => {
             onClick={handleGuestMode}
             disabled={isAnyLoading}
           >
-            👤 Continue as Guest
+            Continue as Guest
           </button>
         </div>
         
@@ -148,9 +148,9 @@ const SimpleLoginScreen = () => {
         </div>
         
         <div className="login-help">
-          <p><strong>🔐 Recommended:</strong> Uses your device's secure browser</p>
-          <p><strong>🌐 Alternative:</strong> Fallback web authentication</p>
-          <p><strong>👤 Guest Mode:</strong> Explore app features without account</p>
+          <p><strong>Recommended:</strong> Uses your device's secure browser</p>
+          <p><strong>Alternative:</strong> Fallback web authentication</p>
+          <p><strong>Guest Mode:</strong> Explore app features without account</p>
         </div>
       </div>
     </div>
