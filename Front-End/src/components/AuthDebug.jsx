@@ -1,11 +1,11 @@
 // src/components/AuthDebug.jsx
 import React, { useState, useEffect } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { Capacitor } from '@capacitor/core';
 import { getRedirectUri } from '../utils/auth';
+import useAuthStatus from '../hooks/useAuthStatus';
 
 const AuthDebug = () => {
-  const { isAuthenticated, isLoading, user, error } = useAuth0();
+  const { isAuthenticated, isLoading, user, error } = useAuthStatus();
   const [logs, setLogs] = useState([]);
 
   useEffect(() => {
@@ -53,14 +53,11 @@ const AuthDebug = () => {
         Auth Debug Panel
       </div>
       
-      <div><strong>Platform:</strong> {Capacitor.isNativePlatform() ? 'Mobile' : 'Web'}</div>
-      <div><strong>Capacitor Platform:</strong> {Capacitor.getPlatform()}</div>
-      <div><strong>User Agent Mobile:</strong> {navigator.userAgent.includes('wv') && navigator.userAgent.includes('Android') ? 'Yes' : 'No'}</div>
-      <div><strong>Redirect URI:</strong> {getRedirectUri()}</div>
+      <div><strong>Platform:</strong> {Capacitor.getPlatform()}</div>
+      <div><strong>Mobile:</strong> {Capacitor.isNativePlatform() ? 'Yes' : 'No'}</div>
       <div><strong>Loading:</strong> {isLoading ? 'Yes' : 'No'}</div>
       <div><strong>Authenticated:</strong> {isAuthenticated ? 'Yes' : 'No'}</div>
-      <div><strong>User:</strong> {user?.name || 'None'}</div>
-      <div><strong>Current URL:</strong> {window.location.href}</div>
+      <div><strong>User:</strong> {user?.name || user?.nickname || 'None'}</div>
       
       {error && (
         <div style={{ color: '#f44336', marginTop: '5px' }}>
