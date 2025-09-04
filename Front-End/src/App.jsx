@@ -13,10 +13,8 @@ import WorkoutGenerator from "./workoutGenerator/workoutGenerator.jsx";
 import AIRecipeGenerator from "./RecipeGenerator/recipeGenerator.jsx";
 import Profile from "./ProfilePage/Profile.jsx";
 import Contact from "./Contact Page/Contact.jsx";
-import AuthDebug from "./components/AuthDebug.jsx";
 import AuthStateManager from "./components/AuthStateManager.jsx";
 import CustomSplashScreen from "./components/SplashScreen/SplashScreen.jsx";
-import AuthDebugPanel from "./components/AuthDebugPanel.jsx";
 import useAuthStatus from './hooks/useAuthStatus';
 
 function App() {
@@ -62,9 +60,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Routes>
         <Footer />
-        <AuthDebug />
         <AuthStateManager />
-        <AuthDebugPanel />
       </Router>
     </CustomSplashScreen>
   );

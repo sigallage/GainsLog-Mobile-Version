@@ -177,22 +177,6 @@ const Header = () => {
                   >
                     Sign In with Google
                   </button>
-                  <button 
-                    className="sheet-auth-button secondary-login" 
-                    onClick={() => {handleSignup(); setMenuOpen(false);}}
-                  >
-                    Create Account
-                  </button>
-                  <button 
-                    className="sheet-auth-button guest-btn" 
-                    onClick={() => {
-                      localStorage.setItem('guestMode', 'true');
-                      setMenuOpen(false);
-                      window.location.reload();
-                    }}
-                  >
-                    Continue as Guest
-                  </button>
                   <small className="auth-note">
                     Sign in to save your workouts and track progress
                   </small>
