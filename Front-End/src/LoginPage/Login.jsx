@@ -1,4 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
+import useAuthStatus from "../hooks/useAuthStatus";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { performLogin, performLogout } from "../utils/auth";
@@ -6,13 +7,17 @@ import "./Login.css";
 
 const Login = () => {
   const { 
-    loginWithRedirect, 
-    logout, 
-    user, 
     isAuthenticated, 
     isLoading,
-    getAccessTokenSilently 
+    user
+  } = useAuthStatus();
+  
+  const { 
+    loginWithRedirect, 
+    logout,
+    getAccessTokenSilently: auth0GetToken
   } = useAuth0();
+  
   const navigate = useNavigate();
 
   // Enhanced silent authentication check
@@ -21,7 +26,7 @@ const Login = () => {
       if (isAuthenticated) return;
       
       try {
-        await getAccessTokenSilently({
+        await auth0GetToken({
           authorizationParams: {
             prompt: "none",
             scope: "openid profile email",
@@ -41,7 +46,7 @@ const Login = () => {
     if (process.env.NODE_ENV === "production") {
       checkAuth();
     }
-  }, [getAccessTokenSilently, isAuthenticated]);
+  }, [auth0GetToken, isAuthenticated]);
 
   // Improved redirect handling
   useEffect(() => {
