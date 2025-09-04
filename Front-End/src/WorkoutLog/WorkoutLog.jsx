@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import useAuthStatus from "../hooks/useAuthStatus";
 import { apiClient } from "../utils/httpClient";
 import "./WorkoutLog.css";
 
@@ -11,8 +12,12 @@ const WorkoutLog = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { 
-    isAuthenticated, 
-    getAccessTokenSilently,
+    isAuthenticated,
+    tokens
+  } = useAuthStatus();
+  
+  const { 
+    getAccessTokenSilently: auth0GetToken,
     loginWithRedirect 
   } = useAuth0();
 
@@ -55,9 +60,17 @@ const WorkoutLog = () => {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        await getAccessTokenSilently({ 
-          authorizationParams: { prompt: "none" } 
-        });
+        if (tokens && tokens.access_token) {
+          // Mobile - check token expiry
+          if (tokens.expires_at && Date.now() >= tokens.expires_at) {
+            console.log("Mobile token expired");
+          }
+        } else {
+          // Web - check Auth0 token
+          await auth0GetToken({ 
+            authorizationParams: { prompt: "none" } 
+          });
+        }
       } catch (error) {
         if (error.error === "login_required") {
           console.log("Token refresh needed");
@@ -66,7 +79,7 @@ const WorkoutLog = () => {
     };
     const interval = setInterval(checkToken, 300000); // Every 5 minutes
     return () => clearInterval(interval);
-  }, [getAccessTokenSilently]);
+  }, [auth0GetToken, tokens]);
 
   const startWorkout = () => {
     if (!workoutName.trim()) {
@@ -155,23 +168,30 @@ const WorkoutLog = () => {
       setIsSaving(true);
       setSaveError(null);
       
-      const token = await getAccessTokenSilently({
-        authorizationParams: {
-          audience: AUTH0_AUDIENCE,
-          scope: "write:workouts"
-        },
-        timeout: 5000
-      }).catch(async (error) => {
-        if (error.error === "login_required") {
-          await loginWithRedirect({
-            appState: {
-              returnTo: window.location.pathname,
-              workoutData: { name: workoutName, exercises: workoutLog }
-            }
-          });
-        }
-        throw error;
-      });
+      let token;
+      if (tokens && tokens.access_token) {
+        // Use manually stored token for mobile
+        token = tokens.access_token;
+      } else {
+        // Use Auth0 for web
+        token = await auth0GetToken({
+          authorizationParams: {
+            audience: AUTH0_AUDIENCE,
+            scope: "write:workouts"
+          },
+          timeout: 5000
+        }).catch(async (error) => {
+          if (error.error === "login_required") {
+            await loginWithRedirect({
+              appState: {
+                returnTo: window.location.pathname,
+                workoutData: { name: workoutName, exercises: workoutLog }
+              }
+            });
+          }
+          throw error;
+        });
+      }
 
       await apiClient.post("/api/workouts", {
         name: workoutName,

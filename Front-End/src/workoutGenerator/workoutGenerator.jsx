@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import useAuthStatus from "../hooks/useAuthStatus";
 import { performLogin } from "../utils/auth";
 import { apiClient } from "../utils/httpClient";
 import "./workoutGenerator.css";
@@ -9,8 +10,12 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const WorkoutGenerator = () => {
   const { 
-    isAuthenticated, 
-    getAccessTokenSilently,
+    isAuthenticated,
+    tokens
+  } = useAuthStatus();
+  
+  const { 
+    getAccessTokenSilently: auth0GetToken,
     loginWithRedirect 
   } = useAuth0();
 
@@ -41,25 +46,32 @@ const WorkoutGenerator = () => {
     setError(null);
 
     try {
-      const token = await getAccessTokenSilently({
-        authorizationParams: {
-          audience: AUTH0_AUDIENCE,
-          scope: "write:workouts"
-        },
-        timeout: 5000
-      }).catch(async (error) => {
-        console.error('Token fetch failed:', error);
-        if (error.error === "login_required") {
-          try {
-            await performLogin(loginWithRedirect, {
-              returnTo: window.location.pathname
-            });
-          } catch (loginError) {
-            console.error('Login redirect failed:', loginError);
+      let token;
+      if (tokens && tokens.access_token) {
+        // Use manually stored token for mobile
+        token = tokens.access_token;
+      } else {
+        // Use Auth0 for web
+        token = await auth0GetToken({
+          authorizationParams: {
+            audience: AUTH0_AUDIENCE,
+            scope: "write:workouts"
+          },
+          timeout: 5000
+        }).catch(async (error) => {
+          console.error('Token fetch failed:', error);
+          if (error.error === "login_required") {
+            try {
+              await performLogin(loginWithRedirect, {
+                returnTo: window.location.pathname
+              });
+            } catch (loginError) {
+              console.error('Login redirect failed:', loginError);
+            }
           }
-        }
-        throw error;
-      });
+          throw error;
+        });
+      }
 
       const prompt = `Generate a ${level} level ${workoutType} workout for someone with ${experience} weeks of gym experience`;
       

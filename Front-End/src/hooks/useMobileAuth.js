@@ -185,11 +185,36 @@ export const useMobileAuth = () => {
   };
 
   const mobileLogout = () => {
-    logout({ 
-      logoutParams: { 
-        returnTo: isMobile ? 'com.gainslog.app://callback' : window.location.origin
-      } 
-    });
+    if (isMobile) {
+      // For mobile, handle logout manually by clearing stored tokens
+      console.log('Performing mobile logout...');
+      
+      // Clear all Auth0 stored data
+      localStorage.removeItem('auth0.is.authenticated');
+      localStorage.removeItem('auth0.cached.tokens');
+      localStorage.removeItem('auth0.cached.user');
+      
+      // Dispatch storage event to trigger auth state updates
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'auth0.is.authenticated',
+        newValue: null,
+        oldValue: 'true'
+      }));
+      
+      // Also dispatch custom event for immediate UI update
+      window.dispatchEvent(new CustomEvent('authStateChanged', {
+        detail: { authenticated: false, user: null }
+      }));
+      
+      console.log('Mobile logout completed');
+    } else {
+      // For web, use standard Auth0 logout
+      logout({ 
+        logoutParams: { 
+          returnTo: window.location.origin
+        } 
+      });
+    }
   };
 
   return {

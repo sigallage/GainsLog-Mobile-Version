@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import useAuthStatus from "../hooks/useAuthStatus";
 import { apiClient, httpClient } from "../utils/httpClient";
 import "./recipeGenerator.css";
 
@@ -10,8 +11,13 @@ const AIRecipeGenerator = () => {
   const { 
     isAuthenticated, 
     getAccessTokenSilently,
+    tokens
+  } = useAuthStatus();
+  
+  const { 
     loginWithRedirect,
-    logout 
+    logout,
+    getAccessTokenSilently: auth0GetToken
   } = useAuth0();
 
   const [dietType, setDietType] = useState("bulking");
@@ -52,27 +58,34 @@ const AIRecipeGenerator = () => {
     setError(null);
 
     try {
-      const token = await getAccessTokenSilently({
-        authorizationParams: {
-          audience: AUTH0_AUDIENCE,
-          scope: "openid profile email write:recipes offline_access"
-        },
-        timeout: 5000,
-        detailedResponse: true
-      }).catch(async (error) => {
-        console.error("Token error:", error);
-        if (error.error === "login_required" || error.error === "missing_refresh_token") {
-          await loginWithRedirect({
-            appState: { returnTo: window.location.pathname },
-            authorizationParams: {
-              prompt: "login",
-              scope: "openid profile email write:recipes offline_access",
-              audience: AUTH0_AUDIENCE
-            }
-          });
-        }
-        throw error;
-      });
+      let token;
+      if (tokens && tokens.access_token) {
+        // Use manually stored token for mobile
+        token = tokens.access_token;
+      } else {
+        // Use Auth0 for web
+        token = await auth0GetToken({
+          authorizationParams: {
+            audience: AUTH0_AUDIENCE,
+            scope: "openid profile email write:recipes offline_access"
+          },
+          timeout: 5000,
+          detailedResponse: true
+        }).catch(async (error) => {
+          console.error("Token error:", error);
+          if (error.error === "login_required" || error.error === "missing_refresh_token") {
+            await loginWithRedirect({
+              appState: { returnTo: window.location.pathname },
+              authorizationParams: {
+                prompt: "login",
+                scope: "openid profile email write:recipes offline_access",
+                audience: AUTH0_AUDIENCE
+              }
+            });
+          }
+          throw error;
+        });
+      }
 
       const prompt = `Generate a ${dietType} recipe with ${country} influences`;
       

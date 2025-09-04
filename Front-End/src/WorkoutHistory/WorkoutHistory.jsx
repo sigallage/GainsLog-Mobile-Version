@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import useAuthStatus from "../hooks/useAuthStatus";
 import { apiClient } from "../utils/httpClient";
 import "./WorkoutHistory.css";
 
@@ -9,7 +10,8 @@ const WorkoutHistory = () => {
   const [workoutHistory, setWorkoutHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { isAuthenticated, getAccessTokenSilently, tokens } = useAuthStatus();
+  const { getAccessTokenSilently: auth0GetToken } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,7 +23,16 @@ const WorkoutHistory = () => {
     try {
       setLoading(true);
       setError(null);
-      const token = await getAccessTokenSilently();
+      
+      let token;
+      if (tokens && tokens.access_token) {
+        // Use manually stored token for mobile
+        token = tokens.access_token;
+      } else {
+        // Use Auth0 for web
+        token = await auth0GetToken();
+      }
+      
       const response = await apiClient.get("/api/workouts", {
         headers: {
           Authorization: `Bearer ${token}`
