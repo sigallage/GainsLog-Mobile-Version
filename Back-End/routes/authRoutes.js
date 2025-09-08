@@ -10,6 +10,17 @@ dotenv.config();
 const router = express.Router();
 
 // ======================
+// TEST ENDPOINT
+// ======================
+router.get('/test', (req, res) => {
+  res.status(200).json({ 
+    message: 'Backend server is running!', 
+    timestamp: new Date().toISOString(),
+    server: 'GainsLog Backend'
+  });
+});
+
+// ======================
 // SECURITY MIDDLEWARE
 // ======================
 router.use(helmet());

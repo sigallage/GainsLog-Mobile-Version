@@ -38,6 +38,40 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'GainsLog API Server is running!',
+    timestamp: new Date().toISOString(),
+    port: PORT
+  });
+});
+
+// Network info endpoint to help mobile apps find the server
+app.get('/api/network-info', (req, res) => {
+  const os = require('os');
+  const networkInterfaces = os.networkInterfaces();
+  let hostIP = 'localhost';
+  
+  // Find the first non-internal IPv4 address
+  for (const interfaceName in networkInterfaces) {
+    const interfaces = networkInterfaces[interfaceName];
+    for (const iface of interfaces) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        hostIP = iface.address;
+        break;
+      }
+    }
+    if (hostIP !== 'localhost') break;
+  }
+  
+  res.json({
+    hostIP,
+    port: PORT,
+    fullUrl: `http://${hostIP}:${PORT}`,
+    networkInterfaces: Object.keys(networkInterfaces)
+  });
+});
+
 app.use("/api/users", authRoutes);
 app.use("/api/workouts", workoutRoutes);
 app.use("/api/exercises", exerciseRoutes);
@@ -51,7 +85,20 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log("MongoDB connected");
-    app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT} and accessible from all interfaces`));
+    const server = app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT} and accessible from all interfaces`);
+      console.log(`Server address: http://0.0.0.0:${PORT}`);
+      console.log(`Local access: http://localhost:${PORT}`);
+      console.log(`WiFi access: http://172.27.0.174:${PORT}`);
+      console.log(`Android emulator access: http://10.0.2.2:${PORT}`);
+    });
+    
+    server.on('error', (err) => {
+      console.error('Server error:', err);
+      if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use`);
+      }
+    });
   })
   .catch((err) => {
     console.error("MongoDB connection error:", err);
