@@ -1,8 +1,9 @@
 import { CapacitorHttp } from '@capacitor/core';
 import { Capacitor } from '@capacitor/core';
 import axios from 'axios';
+import { API_BASE_URL } from './apiConfig.js';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = API_BASE_URL;
 
 // Check if we're on a mobile platform
 const isMobile = Capacitor.isNativePlatform();

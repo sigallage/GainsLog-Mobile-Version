@@ -3,10 +3,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import useAuthStatus from "../hooks/useAuthStatus";
 import { performLogin } from "../utils/auth";
 import { apiClient } from "../utils/httpClient";
+import { API_BASE_URL } from "../utils/apiConfig";
 import "./workoutGenerator.css";
 
 const AUTH0_AUDIENCE = "gains-log-api";
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = API_BASE_URL;
 
 const WorkoutGenerator = () => {
   const { 

@@ -2,9 +2,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";  // ← Changed import source
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../utils/httpClient";
+import { API_BASE_URL } from "../utils/apiConfig";
 import "./Signup.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = API_BASE_URL;
 
 const Signup = () => {
   const { loginWithRedirect, isAuthenticated, user } = useAuth0();
