@@ -103,29 +103,56 @@ npx cap open ios
 
 ## Network Configuration
 
-### Automatic Detection
-The app automatically detects your network configuration:
+### APK Installation and Setup
 
-- **Web Browser**: Uses `localhost:3000`
-- **Android Emulator**: Uses `localhost:3000` with adb port forwarding
-- **Physical Device**: Auto-detects your computer's WiFi IP address
+**Your APK is ready!** Location: `Front-End/android/app/build/outputs/apk/debug/app-debug.apk`
 
-### Manual Override
-If auto-detection doesn't work, set the API URL manually in `Front-End/.env`:
+#### For Physical Device (Phone/Tablet):
+1. **Backend Server**: Make sure your backend is running:
+   ```bash
+   cd Back-End
+   node server.js
+   ```
+   
+2. **Check Your IP**: Find your computer's WiFi IP address:
+   ```cmd
+   ipconfig
+   ```
+   Look for "Wireless LAN adapter Wi-Fi" → "IPv4 Address"
 
-```env
-# For your specific network
-VITE_API_URL=http://192.168.1.100:3000
+3. **Update Configuration**: In `Front-End/.env`:
+   ```env
+   VITE_API_URL=http://[YOUR_WIFI_IP]:3000
+   ```
+   Example: `VITE_API_URL=http://172.27.0.174:3000`
 
-# Or for different port
-VITE_API_URL=http://localhost:8080
-```
+4. **Rebuild APK**:
+   ```bash
+   cd Front-End
+   npm run build
+   npx cap copy android
+   npx cap sync android
+   cd android
+   ./gradlew assembleDebug
+   ```
 
-### For Android Emulator
-Run this command to set up port forwarding:
-```bash
-adb forward tcp:3000 tcp:3000
-```
+5. **Install APK**: Transfer `app-debug.apk` to your device and install
+
+#### For Android Emulator:
+1. **Use Special IP**: Set in `Front-End/.env`:
+   ```env
+   VITE_API_URL=http://10.0.2.2:3000
+   ```
+
+2. **Port Forwarding** (if available):
+   ```bash
+   adb forward tcp:3000 tcp:3000
+   ```
+
+### Current Working Configuration
+- **Backend Server**: Running on `http://172.27.0.174:3000`
+- **Status**: ✅ Server is accessible and responding
+- **APK Built**: ✅ Latest APK with correct IP configuration
 
 ## Common IP Address Ranges
 

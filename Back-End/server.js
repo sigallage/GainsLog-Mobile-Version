@@ -78,7 +78,7 @@ app.use("/api/exercises", exerciseRoutes);
 app.use("/api/aiworkouts", aiWorkoutRoutes); //AI workout endpoint
 app.use("/api/airecipes", aiRecipeRoutes); 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // MongoDB Connection with Better Error Handling
 mongoose
